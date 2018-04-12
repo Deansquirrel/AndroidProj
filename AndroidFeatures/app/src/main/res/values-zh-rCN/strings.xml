@@ -1,0 +1,6 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<resources>
+	<string name="app_name">Features</string>
+
+	<string name="activity_hello_content">Deansquirrel\nFeatures</string>
+</resources>

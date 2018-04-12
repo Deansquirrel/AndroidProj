@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/backColor"
+    tools:context=".MainActivity">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/height_actionbar_activity"
+            android:background="@color/whiteColor"
+            app:titleTextAppearance="@style/CustomTheme.ToolbarTitle"
+            app:title="Toolbar"/>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:background="@color/whiteColor">
+
+                <Button
+                    android:id="@+id/btnSMSSender"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Button Link"
+                    android:layout_margin="@dimen/height_margin_default"
+                    style="@style/CustomTheme.Button.Link"/>
+
+            </LinearLayout>
+
+
+        </ScrollView>
+
+
+        <!--<Button-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_weight="1"-->
+            <!--android:text="Button Link"-->
+            <!--android:layout_margin="@dimen/height_margin_default"-->
+            <!--style="@style/CustomTheme.Button.Link"/>-->
+
+
+    </LinearLayout>
+
+</android.support.constraint.ConstraintLayout>

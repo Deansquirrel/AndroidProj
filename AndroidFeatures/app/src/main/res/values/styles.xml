@@ -1,0 +1,88 @@
+<resources>
+
+    <!--<style name="CustomTheme" parent="Theme.AppCompat.Light.DarkActionBar">-->
+        <!--<item name="colorPrimary">@color/colorPrimary</item>-->
+        <!--<item name="colorPrimaryDark">@color/colorPrimaryDark</item>-->
+        <!--<item name="colorAccent">@color/colorAccent</item>-->
+        <!--<item name="android:actionBarSize">@dimen/activity_actionbar_height</item>-->
+        <!--&lt;!&ndash;<item name="android:colorForeground">@color/whiteColor</item>&ndash;&gt;-->
+        <!--&lt;!&ndash;<item name="android:statusBarColor">@color/whiteColor</item>&ndash;&gt;-->
+    <!--</style>-->
+
+    <!--<style name="CustomLoginTheme" parent="CustomTheme">-->
+        <!--<item name="android:actionBarSize">@dimen/activity_login_actionbar_height</item>-->
+    <!--</style>-->
+
+    <style name="FullscreenTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowFullscreen">?android:windowNoTitle</item>
+    </style>
+
+    <style name="CustomTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <!--<item name="android:actionBarSize">@dimen/height_actionbar_activity</item>-->
+    </style>
+
+    <style name="CustomTheme.ToolbarTitle" parent="@style/TextAppearance.Widget.AppCompat.Toolbar.Title">
+    </style>
+
+    <style name="CustomTheme.ToolbarTitle.Login" parent="CustomTheme.ToolbarTitle">
+        <item name="android:textSize">@dimen/text_size_login_title</item>
+        <item name="android:textColor">@color/themeBlueColor</item>
+    </style>
+
+    <style name="CustomTheme.TextView">
+        <item name="android:height">@dimen/height_context_line_default</item>
+        <item name="android:textColor">@color/blackColor</item>
+        <item name="android:textSize">@dimen/text_size_default</item>
+    </style>
+
+    <style name="CustomTheme.Button" parent="Widget.AppCompat.Button">
+        <item name="android:textSize">@dimen/text_size_default</item>
+        <item name="android:textColor">@color/whiteColor</item>
+        <item name="android:background">@drawable/button_background</item>
+    </style>
+
+    <style name="CustomTheme.Button.Link" parent="CustomTheme.Button">
+        <item name="android:textColor">@color/themeBlueColor</item>
+        <item name="android:background">@color/transparent</item>
+    </style>
+
+    <style name="CustomTheme.EditText" parent="Widget.AppCompat.EditText">
+        <item name="android:textColorHint">@color/black_overlay</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:colorControlNormal">@color/black_overlay</item>
+        <item name="android:colorControlActivated">@color/black_overlay</item>
+    </style>
+    <!--
+        <style name="CustomTheme.TextView.LineTitle" parent="CustomTheme.TextView">
+            <item name="android:textColor">@color/fontLightColor</item>
+        </style>
+
+        <style name="CustomTheme.TextView.DialogTitle" parent="CustomTheme.TextView">
+            <item name="android:textColor">@color/fontLightColor</item>
+        </style>
+
+        <style name="CustomTheme.Button" parent="Widget.AppCompat.Button">
+            <item name="android:textSize">@dimen/text_size_default</item>
+            <item name="android:textColor">@color/whiteColor</item>
+            <item name="android:background">@drawable/buttom_background</item>
+        </style>
+
+        <style name="CustomTheme.Button.Link" parent="CustomTheme.Button">
+            <item name="android:textColor">@color/themeColor</item>
+            <item name="android:background">@color/transparent</item>
+        </style>
+
+        <style name="CustomTheme.RadioButton">
+            <item name="android:textSize">@dimen/text_size_default</item>
+            <item name="android:textColor">@color/radiobutton_textcolor</item>
+            <item name="android:button">@null</item>
+            <item name="android:background">@drawable/radiobutton_background</item>
+        </style>
+
+
+    -->
+</resources>
