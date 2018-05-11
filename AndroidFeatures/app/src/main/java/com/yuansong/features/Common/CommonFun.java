@@ -7,6 +7,9 @@ import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 /**
  * Created by yuansong on 2018/3/9.
  */
@@ -15,17 +18,26 @@ public class CommonFun {
 
     private CommonFun(){}
 
+    private static Timer mTimer = new Timer();
+    private static TimerTask mTimerTask = null;
+
     public static String createNewGuid(){
         return java.util.UUID.randomUUID().toString().toUpperCase();
     }
 
-    public static void showActivity(AppCompatActivity context, Class<?> cls, boolean isQuit){
+    public static void showActivity(final AppCompatActivity context, Class<?> cls, boolean isQuit){
         Log.i("CommonFun","showActivity|" + context.getClass().toString() + "|" + cls.toString() + "|" + String.valueOf(isQuit));
         final Intent it = new Intent(context,cls);
-        if(isQuit){
-            context.finish();
-        }
         context.startActivity(it);
+        if(isQuit){
+            mTimerTask = new TimerTask() {
+                @Override
+                public void run() {
+                    context.finish();
+                }
+            };
+            mTimer.schedule(mTimerTask,100);
+        }
     }
 
     public static void setFocus(AppCompatActivity activity, EditText et){

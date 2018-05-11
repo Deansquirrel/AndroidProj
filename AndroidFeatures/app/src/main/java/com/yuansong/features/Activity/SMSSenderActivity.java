@@ -3,6 +3,7 @@ package com.yuansong.features.Activity;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -28,6 +29,8 @@ public class SMSSenderActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_smssender);
 
+        Log.i("SMSSenderActivity","onCreate");
+
         mSMSHelper = new SMSHelper();
 
         mToolbar = findViewById(R.id.toolbar);
@@ -40,10 +43,15 @@ public class SMSSenderActivity extends BaseActivity {
         setSupportActionBar(mToolbar);
 
         mCheckBox.setText("直接发送");
-        mCheckBox.setChecked(true);
+        mCheckBox.setChecked(false);
 
         mBtnSend.setText("Send");
-        mBtnSend.setOnClickListener(new BtnClickSend());
+        mBtnSend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                sendMsg();
+            }
+        });
 
         ActionBar ab = this.getSupportActionBar();
         ab.setDisplayHomeAsUpEnabled(true);
@@ -51,36 +59,36 @@ public class SMSSenderActivity extends BaseActivity {
         CommonFun.setFocus(SMSSenderActivity.this,mEditTextPhoneNumber);
     }
 
-    private class BtnClickSend implements View.OnClickListener{
+    public void sendMsg(){
+        mBtnSend.setEnabled(false);
 
-        @Override
-        public void onClick(View view) {
+        String phoneNumber = mEditTextPhoneNumber.getText().toString().trim();
+        String message = mEditTextMessage.getText().toString().trim();
 
-            mBtnSend.setEnabled(false);
+        Log.i("phoneNumber",phoneNumber);
+        Log.i("message",message);
 
-            String phoneNumber = mEditTextPhoneNumber.getText().toString().trim();
-            String message = mEditTextMessage.getText().toString().trim();
-            if(phoneNumber.equals("") || message.equals("")){
-                CommonFun.showMsg(SMSSenderActivity.this,"电话或发送内容不能为空");
-                if(phoneNumber.equals("")){
-                    CommonFun.setFocus(SMSSenderActivity.this,mEditTextPhoneNumber);
-                }
-                else{
-                    CommonFun.setFocus(SMSSenderActivity.this,mEditTextMessage);
-                }
+        if(phoneNumber.equals("") || message.equals("")){
+            CommonFun.showMsg(SMSSenderActivity.this,"电话或发送内容不能为空");
+            if(phoneNumber.equals("")){
+                CommonFun.setFocus(SMSSenderActivity.this,mEditTextPhoneNumber);
             }
             else{
-                if(mCheckBox.isChecked()){
-                    mSMSHelper.sendMessage(phoneNumber,message);
-                }
-                else{
-                    mSMSHelper.sendMessagePre(SMSSenderActivity.this,phoneNumber,message);
-                }
-                mEditTextPhoneNumber.setText("");
-                mEditTextMessage.setText("");
+                CommonFun.setFocus(SMSSenderActivity.this,mEditTextMessage);
             }
-
-            mBtnSend.setEnabled(true);
         }
+        else{
+            Log.i("checked",String.valueOf(mCheckBox.isChecked()));
+            if(mCheckBox.isChecked()){
+                mSMSHelper.sendMessage(phoneNumber,message);
+            }
+            else{
+                mSMSHelper.sendMessagePre(SMSSenderActivity.this,phoneNumber,message);
+            }
+            mEditTextPhoneNumber.setText("");
+            mEditTextMessage.setText("");
+        }
+
+        mBtnSend.setEnabled(true);
     }
 }

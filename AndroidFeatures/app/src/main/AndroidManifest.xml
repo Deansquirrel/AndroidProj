@@ -13,7 +13,7 @@
         android:theme="@style/CustomTheme">
         <activity
             android:name=".HelloActivity"
-            android:theme="@style/FullscreenTheme">
+            android:theme="@style/CustomTheme.Fullscreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
