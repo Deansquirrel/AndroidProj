@@ -37,18 +37,7 @@ public class SMSHelper{
     public void sendMessagePre(Activity activity, String phoneNumber, String message){
         Log.i("phoneNumber",phoneNumber);
         Log.i("message",message);
-//        Intent smsIntent = new Intent(Intent.ACTION_VIEW);
-//        smsIntent.setData(Uri.parse("smsto:"));
-//        smsIntent.setType("vnd.android-dir/mms-sms");
-//
-//        smsIntent.putExtra("address"  , phoneNumber);
-//        smsIntent.putExtra("sms_body"  , message);
-//        try {
-//            activity.startActivity(smsIntent);
-//            Log.i("Finished sending SMS...", "");
-//        } catch (android.content.ActivityNotFoundException ex) {
-//            Toast.makeText(activity,"SMS faild, please try again later.", Toast.LENGTH_SHORT).show();
-//        }
+
         Intent sendIntent = new Intent(Intent.ACTION_SENDTO);
         sendIntent.setData(Uri.parse("smsto:" + phoneNumber));
         sendIntent.putExtra("sms_body", message);

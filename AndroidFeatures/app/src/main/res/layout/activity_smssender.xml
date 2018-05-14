@@ -18,7 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/height_actionbar_activity"
             android:background="@color/whiteColor"
-            app:title="Toolbar"
+            app:title="SMS Sender"
             app:titleTextAppearance="@style/CustomTheme.ToolbarTitle"
              />
 

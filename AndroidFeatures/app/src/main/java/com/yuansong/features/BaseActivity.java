@@ -3,6 +3,7 @@ package com.yuansong.features;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -27,10 +28,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         //标题栏置白
-        Window window = this.getWindow();
-        if(window != null){
-            window.setStatusBarColor(this.getResources().getColor(R.color.whiteColor));
-        }
+        setLightWindow();
     }
 
     @Override
@@ -68,12 +66,35 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
     }
 
+    protected void showBackOption(){
+        ActionBar ab = this.getSupportActionBar();
+        if(ab != null){
+            ab.setDisplayHomeAsUpEnabled(true);
+        }
+    }
+
     protected void clickActionBarBackBtn(){
         if(BaseActivity.this.isTaskRoot()){
             moveTaskToBack(false);
         }
         else{
             finish();
+        }
+    }
+
+    protected void setDarkWindow(){
+        //标题栏颜色
+        Window window = this.getWindow();
+        if(window != null){
+            window.setStatusBarColor(this.getResources().getColor(R.color.themeBlueColor));
+        }
+    }
+
+    protected void setLightWindow(){
+        //标题栏置白
+        Window window = this.getWindow();
+        if(window != null){
+            window.setStatusBarColor(this.getResources().getColor(R.color.whiteColor));
         }
     }
 }

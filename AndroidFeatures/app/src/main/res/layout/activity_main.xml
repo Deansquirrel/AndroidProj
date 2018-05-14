@@ -19,7 +19,7 @@
             android:layout_height="@dimen/height_actionbar_activity"
             android:background="@color/whiteColor"
             app:titleTextAppearance="@style/CustomTheme.ToolbarTitle"
-            app:title="Toolbar"/>
+            app:title="Features List"/>
 
         <ScrollView
             android:layout_width="match_parent"
@@ -35,7 +35,14 @@
                     android:id="@+id/btnSMSSender"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Button Link"
+                    android:text="SMSSender"
+                    android:layout_margin="@dimen/height_margin_default"
+                    style="@style/CustomTheme.Button.Link"/>
+                <Button
+                    android:id="@+id/btnGDMap"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="SMSSender"
                     android:layout_margin="@dimen/height_margin_default"
                     style="@style/CustomTheme.Button.Link"/>
 

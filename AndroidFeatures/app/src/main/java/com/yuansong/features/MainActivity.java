@@ -21,9 +21,6 @@ public class MainActivity extends BaseActivity {
         mToolbar = findViewById(R.id.toolbar);
         mBtnSMSSender = findViewById(R.id.btnSMSSender);
 
-        mToolbar.setTitle("Features List");
-
-        mBtnSMSSender.setText("SMSSender");
         mBtnSMSSender.setOnClickListener(new BtnClickSMSSender());
     }
 

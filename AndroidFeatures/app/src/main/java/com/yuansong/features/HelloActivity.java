@@ -24,24 +24,21 @@ public class HelloActivity extends BaseActivity {
 
         mTextViewTitle.setText(getResources().getText(R.string.activity_hello_content));
 
-        task = new TimerTask() {
-            @Override
-            public void run() {
-                gotoMainActivity();
-            }
-        };
 
-        timer.schedule(task,2000);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-    }
 
-    private void gotoMainActivity(){
-        CommonFun.showActivity(this,MainActivity.class,true);
-    }
+        task = new TimerTask() {
+            @Override
+            public void run() {
+                CommonFun.showActivity(HelloActivity.this,MainActivity.class,true);
+            }
+        };
 
+        timer.schedule(task,2000);
+    }
 
 }

@@ -20,7 +20,8 @@
 
     <!--高度-->
     <dimen name="height_actionbar_activity">45dp</dimen>
-    <dimen name="height_context_line_default">30dp</dimen>
+    <dimen name="height_context_line_default">40dp</dimen>
+    <dimen name="height_context_line_thin">30dp</dimen>
 
     <!--Activity 登录 ActionBar的高度-->
     <dimen name="height_actionbar_activity_login">90dp</dimen>
@@ -33,10 +34,10 @@
 
 
 
-    !-Activity 登录 ActionBar 文本大小-
+    <!--Activity 登录 ActionBar 文本大小-
     <dimen name="text_size_actionbar_activity_login">45dp</dimen>
-    !-Activity ActionBar 默认文本大小-
+    <!-Activity ActionBar 默认文本大小-
     <dimen name="text_size_actionbar_default">20dp</dimen>
-
     -->
+
 </resources>
