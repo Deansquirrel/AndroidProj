@@ -12,15 +12,17 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="@dimen/height_actionbar_activity"
-            android:background="@color/whiteColor"
-            app:title="SMS Sender"
-            app:titleTextAppearance="@style/CustomTheme.ToolbarTitle"
-             />
+            style="@style/CustomTheme.Toolbar.Light"
+            app:title="RecordAdd"
+            />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/backColor" />
 
         <ScrollView
             android:layout_width="match_parent"
