@@ -5,20 +5,29 @@
     <uses-permission android:name="android.permission.SEND_SMS" />
 
     <!-- 高德地图所需权限 -->
-    <!--允许程序打开网络套接字-->
+    <!-- 允许程序打开网络套接字 -->
     <uses-permission android:name="android.permission.INTERNET" />
-    <!--允许程序设置内置sd卡的写权限-->
+    <!-- 允许程序设置内置sd卡的写权限 -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <!--允许程序获取网络状态-->
+    <!-- 允许程序获取网络状态 -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <!--允许程序访问WiFi网络信息-->
+    <!-- 允许程序访问WiFi网络信息 -->
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <!--允许程序读写手机状态和身份-->
+    <!-- 用于获取wifi的获取权限，wifi信息会用来进行网络定位 -->
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <!-- 允许程序读写手机状态和身份 -->
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <!--允许程序访问CellID或WiFi热点来获取粗略的位置-->
+    <!-- 允许程序访问CellID或WiFi热点来获取粗略的位置 -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <!-- 高德地图所需权限 结束-->
+    <!-- 用于访问GPS定位 -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <!-- 用于申请调用A-GPS模块 -->
+    <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
+    <!-- 用于申请获取蓝牙信息进行室内定位 -->
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
 
+    <!-- 高德地图所需权限 结束 -->
     <application
         android:allowBackup="true"
         android:icon="@drawable/icon"
@@ -28,10 +37,16 @@
         android:theme="@style/CustomTheme">
 
         <!-- 高德地图所需Key信息 -->
-        <meta-data android:name="com.amap.api.v2.apikey" android:value="key">
+        <meta-data
+            android:name="com.amap.api.v2.apikey"
+            android:value="5a372d5a6776ea63ce558a9367ca054c">
             //开发者申请的key
         </meta-data>
         <!-- 高德地图所需Key信息 结束 -->
+
+
+        <!-- 高德地图所需Service -->
+        <service android:name="com.amap.api.location.APSService" />
 
         <activity
             android:name=".HelloActivity"
@@ -44,7 +59,8 @@
         </activity>
         <activity android:name=".MainActivity" />
         <activity android:name=".Activity.SMSSenderActivity" />
-        <activity android:name=".Activity.GDMapActivity"></activity>
+        <activity android:name=".Activity.GDMapActivity" />
+        <activity android:name=".Activity.GDMapShowMapActivity"></activity>
     </application>
 
 </manifest>

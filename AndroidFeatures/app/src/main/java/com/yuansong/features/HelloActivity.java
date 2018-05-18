@@ -24,7 +24,6 @@ public class HelloActivity extends BaseActivity {
 
         mTextViewTitle.setText(getResources().getText(R.string.activity_hello_content));
 
-
     }
 
     @Override

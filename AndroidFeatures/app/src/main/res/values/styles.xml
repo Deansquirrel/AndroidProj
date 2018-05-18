@@ -43,13 +43,13 @@
         <item name="android:popupTheme">@style/CustomTheme.Toolbar.PopupThem.Light</item>
     </style>
 
-    <style name="CustomTheme.Toolbar.Theme.Light" parent="@style/ThemeOverlay.AppCompat.Light"></style>
+    <style name="CustomTheme.Toolbar.Theme.Light" parent="@style/ThemeOverlay.AppCompat.Light" />
 
-    <style name="CustomTheme.Toolbar.PopupThem.Light" parent="@style/ThemeOverlay.AppCompat.Light"></style>
+    <style name="CustomTheme.Toolbar.PopupThem.Light" parent="@style/ThemeOverlay.AppCompat.Light" />
 
-    <style name="CustomTheme.Toolbar.Theme.Dark" parent="@style/ThemeOverlay.AppCompat.Dark.ActionBar"></style>
+    <style name="CustomTheme.Toolbar.Theme.Dark" parent="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
 
-    <style name="CustomTheme.Toolbar.PopupThem.Dark" parent="@style/ThemeOverlay.AppCompat.Light"></style>
+    <style name="CustomTheme.Toolbar.PopupThem.Dark" parent="@style/ThemeOverlay.AppCompat.Light" />
 
 
     <style name="CustomTheme.Toolbar.Light.Login" parent="@style/CustomTheme.Toolbar.Light">
@@ -87,7 +87,7 @@
     </style>
 
     <style name="CustomTheme.Button.Link" parent="CustomTheme.Button">
-        <item name="android:textColor">@color/themeBlueColor</item>
+        <item name="android:textColor">@color/link_button_text_color</item>
         <item name="android:background">@color/transparent</item>
     </style>
 

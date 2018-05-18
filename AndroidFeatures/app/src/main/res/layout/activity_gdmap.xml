@@ -44,6 +44,20 @@
                     android:text="获取GPS定位"
                     android:layout_margin="@dimen/height_margin_default"
                     style="@style/CustomTheme.Button.Link"/>
+                <Button
+                    android:id="@+id/btnShowMap"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="显示地图"
+                    android:layout_margin="@dimen/height_margin_default"
+                    style="@style/CustomTheme.Button.Link"/>
+                <Button
+                    android:id="@+id/btnMapNavigation"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="地图导航"
+                    android:layout_margin="@dimen/height_margin_default"
+                    style="@style/CustomTheme.Button.Link"/>
 
             </LinearLayout>
         </ScrollView>
