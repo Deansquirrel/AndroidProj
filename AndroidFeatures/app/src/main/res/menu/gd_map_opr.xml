@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/opr_location"
+        android:title="定位"
+        android:icon="@drawable/location"
+        app:showAsAction = "ifRoom"
+        />
+
+    <item
+        android:id="@+id/opr_clear"
+        android:title="清空"
+        android:icon="@drawable/clear"
+        app:showAsAction = "ifRoom"
+        />
+
+    <item
+        android:id="@+id/toolbar_add_circle"
+        android:title="添加圆"
+        android:orderInCategory="1" />
+    <item
+        android:id="@+id/toolbar_add_marker"
+        android:title="添加定位点"
+        android:orderInCategory="2" />
+    <item
+        android:id="@+id/toolbar_calculateLineDistance"
+        android:title="计算距离"
+        android:orderInCategory="3" />
+    <item
+        android:id="@+id/toolbar_add_polygon"
+        android:title="添加多边矩形"
+        android:orderInCategory="4" />
+</menu>
