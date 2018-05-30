@@ -46,4 +46,6 @@ dependencies {
 //    //导航功能
     api 'com.amap.api:navi-3dmap:latest.integration'
     //-----------------------------------------------------------------------------
+
+    api 'com.squareup.okhttp3:okhttp:3.10.0'
 }

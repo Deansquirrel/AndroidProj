@@ -27,10 +27,17 @@ public class GDMapShowMapActivity extends BaseActivity {
     private Toolbar mToolbar = null;
     private MapView mMapView = null;
 
-    LatLng location_center = null;
-    LatLng location_in = null;
-    LatLng location_out = null;
-    Polygon mPolygon = null;
+    private AMap aMap = null;
+    private MyLocationStyle myLocationStyle = null;
+
+    private MarkerOptions mMarkerOptions = null;
+    private MarkerOptions mMarkerOptions_in = null;
+    private MarkerOptions mMarkerOptions_out = null;
+
+    private LatLng location_center = null;
+    private LatLng location_in = null;
+    private LatLng location_out = null;
+    private Polygon mPolygon = null;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -62,13 +69,6 @@ public class GDMapShowMapActivity extends BaseActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-
-    private AMap aMap = null;
-    private MyLocationStyle myLocationStyle = null;
-
-    private MarkerOptions mMarkerOptions = null;
-    private MarkerOptions mMarkerOptions_in = null;
-    private MarkerOptions mMarkerOptions_out = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
