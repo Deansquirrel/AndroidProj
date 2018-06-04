@@ -59,6 +59,13 @@
                     android:text="OkHttp"
                     android:layout_margin="@dimen/height_margin_default"
                     style="@style/CustomTheme.Button.Link"/>
+                <Button
+                    android:id="@+id/btnMsSql"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="MS SQL"
+                    android:layout_margin="@dimen/height_margin_default"
+                    style="@style/CustomTheme.Button.Link"/>
             </LinearLayout>
         </ScrollView>
 
