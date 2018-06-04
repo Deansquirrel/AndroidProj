@@ -1,0 +1,6 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<resources>
+	<string name="app_name">讯飞Test</string>
+
+	<string name="activity_hello_content">讯飞测试</string>
+</resources>

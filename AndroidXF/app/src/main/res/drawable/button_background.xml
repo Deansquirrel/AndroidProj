@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!--<item android:drawable="@color/themeColor"></item>-->
+    <!--<item android:state_pressed="true" android:drawable="@color/colorPrimaryDark"></item>-->
+    <!--<item android:state_focused="true" android:drawable="@color/colorPrimary"></item>-->
+
+    <!-- default -->
+    <item android:state_enabled="true">
+        <shape>
+            <!--<gradient-->
+                <!--android:startColor="@color/themeColor"-->
+                <!--android:endColor="@color/themeColor"-->
+                <!--android:angle="0" />-->
+            <solid android:color="@color/themeBlueColor"/>
+            <corners
+                android:radius="4dp" />
+        </shape>
+    </item>
+    <item android:state_enabled="false" >
+        <shape>
+            <!--<gradient-->
+                <!--android:startColor="@color/black_overlay"-->
+                <!--android:endColor="@color/black_overlay"-->
+                <!--android:angle="270" />-->
+            <solid android:color="@color/black_overlay"/>
+            <corners
+                android:radius="4dp" />
+        </shape>
+    </item>
+</selector>
