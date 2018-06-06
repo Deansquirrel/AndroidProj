@@ -85,7 +85,7 @@
         <item name="android:textColor">@color/fontLightColor</item>
     </style>
 
-    <style name="CustomTheme.Button" parent="Widget.AppCompat.Button">
+    <style name="CustomTheme.Button" parent="Widget.AppCompat.Button.Borderless">
         <item name="android:textSize">@dimen/text_size_default</item>
         <item name="android:textColor">@color/whiteColor</item>
         <item name="android:background">@drawable/button_background</item>

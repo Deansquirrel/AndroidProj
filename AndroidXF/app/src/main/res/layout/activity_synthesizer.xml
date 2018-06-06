@@ -18,6 +18,7 @@
             style="@style/CustomTheme.Toolbar.Light"
             app:title="在线语音合成"
             />
+
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
@@ -31,9 +32,37 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:divider="@drawable/shape"
-                android:showDividers="middle"
                 android:background="@color/whiteColor">
+
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/height_margin_default" />
+
+                <EditText
+                    android:id="@+id/editText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="合成内容"
+                    style="@style/CustomTheme.EditText"
+                    android:inputType="textMultiLine"
+                    android:minLines="1"
+                    android:layout_marginLeft="@dimen/height_margin_default"
+                    android:layout_marginRight="@dimen/height_margin_default" />
+
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/height_margin_default" />
+
+
+                <Button
+                    android:id="@+id/btnButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/height_context_line_default"
+                    android:layout_margin="@dimen/height_margin_default"
+                    style="@style/CustomTheme.Button"
+                    android:layout_marginLeft="@dimen/height_margin_default"
+                    android:layout_marginRight="@dimen/height_margin_default"/>
+
 
                 <!--<Button-->
                     <!--android:id="@+id/btnGet"-->

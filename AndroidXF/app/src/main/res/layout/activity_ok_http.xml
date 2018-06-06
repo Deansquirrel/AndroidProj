@@ -12,11 +12,11 @@
         android:orientation="vertical">
 
         <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/height_actionbar_activity"
-        style="@style/CustomTheme.Toolbar.Light"
-        app:title="OkHttp"
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/height_actionbar_activity"
+            style="@style/CustomTheme.Toolbar.Light"
+            app:title="OkHttp"
         />
         <View
             android:layout_width="match_parent"
