@@ -59,6 +59,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/height_context_line_default"
                     android:layout_margin="@dimen/height_margin_default"
+                    android:text="合  成"
                     style="@style/CustomTheme.Button"
                     android:layout_marginLeft="@dimen/height_margin_default"
                     android:layout_marginRight="@dimen/height_margin_default"/>

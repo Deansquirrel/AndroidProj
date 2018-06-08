@@ -25,7 +25,8 @@
 
         <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="0dp"
+            android:layout_weight="1">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -49,9 +50,34 @@
                 <!--android:text="Post"-->
                 <!--android:layout_margin="@dimen/height_margin_default"-->
                 <!--style="@style/CustomTheme.Button.Link"/>-->
+                <TextView
+                    android:id="@+id/textView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/height_margin_default"
+                    style="@style/CustomTheme.TextView"
+                    android:text="TextView" />
             </LinearLayout>
 
         </ScrollView>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/whiteColor"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/btnButton"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/height_context_line_default"
+                android:layout_margin="@dimen/height_margin_default"
+                android:text="开  始"
+                style="@style/CustomTheme.Button"/>
+
+        </LinearLayout>
+
+
 
 
     </LinearLayout>

@@ -13,7 +13,7 @@ import android.widget.EditText;
 import com.yuansong.xf.BaseActivity;
 import com.yuansong.xf.Common.CommonFun;
 import com.yuansong.xf.R;
-import com.yuansong.xf.XF.SynthesizerHelper;
+import com.yuansong.xf.XF.IflytekHelper;
 
 public class SynthesizerActivity extends BaseActivity {
 
@@ -21,7 +21,7 @@ public class SynthesizerActivity extends BaseActivity {
     private EditText mEditText = null;
     private Button mButton = null;
 
-    private SynthesizerHelper mSynthesizerHelper = null;
+    private IflytekHelper mIflytekHelper = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +59,29 @@ public class SynthesizerActivity extends BaseActivity {
             @Override
             public void onClick(View view) {
                 String msg = mEditText.getText().toString().trim();
-                mSynthesizerHelper.speak(msg);
+                mIflytekHelper.speak(msg, new IflytekHelper.SpeakListener() {
+                    @Override
+                    public void preSpeak() {
+                        mButton.setEnabled(false);
+                    }
+
+                    @Override
+                    public void onCompleted() {
+                        mEditText.setText("");
+                    }
+
+                    @Override
+                    public void postSpeak() {
+                        mButton.setEnabled(true);
+                    }
+
+                    @Override
+                    public void onFailed(int errCode, String errDesc) {
+                        String errMsg = errDesc + "(" + String.valueOf(errCode) + ")";
+                        Log.i("err", errMsg);
+                        CommonFun.showError(SynthesizerActivity.this,errMsg,false);
+                    }
+                });
             }
         });
 
@@ -69,7 +91,8 @@ public class SynthesizerActivity extends BaseActivity {
         showBackOption();
 
         mEditText.setEnabled(false);
-        mSynthesizerHelper = new SynthesizerHelper(SynthesizerActivity.this, new SynthesizerHelper.InitListener() {
+        mIflytekHelper = new IflytekHelper(SynthesizerActivity.this);
+        mIflytekHelper.InitSynthesizer(new IflytekHelper.InitListener() {
             @Override
             public void onSuccess() {
                 Log.i("msg","在线语音合成初始化成功");
@@ -89,8 +112,8 @@ public class SynthesizerActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if(mSynthesizerHelper != null){
-            mSynthesizerHelper.destroy();
+        if(mIflytekHelper != null){
+            mIflytekHelper.destroy();
         }
     }
 

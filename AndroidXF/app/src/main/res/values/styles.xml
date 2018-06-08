@@ -66,8 +66,8 @@
         <item name="android:textColor">@color/themeBlueColor</item>
     </style>
 
+    <!--<item name="android:height">@dimen/height_context_line_default</item>-->
     <style name="CustomTheme.TextView">
-        <item name="android:height">@dimen/height_context_line_default</item>
         <item name="android:textColor">@color/fontColor</item>
         <item name="android:textSize">@dimen/text_size_default</item>
         <item name="android:gravity">center_vertical</item>
