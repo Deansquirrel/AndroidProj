@@ -1,10 +1,5 @@
 package com.yuansong.xf.Activity;
 
-import android.annotation.SuppressLint;
-import android.os.Handler;
-import android.os.Message;
-import android.support.annotation.IntDef;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -18,12 +13,6 @@ import com.yuansong.xf.Common.CommonFun;
 import com.yuansong.xf.R;
 import com.yuansong.xf.XF.IflytekHelper;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.sql.Time;
-import java.util.Calendar;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class RecognizerActivity extends BaseActivity {
 
@@ -34,16 +23,7 @@ public class RecognizerActivity extends BaseActivity {
 
     private RecStatus status = null;
 
-    private Calendar mCalendar = null;
-    private Timer mTimer = null;
-    private TimerTask mTimerTask = null;
-
-    private String mText = "";
-    private Handler handler = null;
-
     private IflytekHelper mIflytekHelper = null;
-
-    private static final int HANDLE_TYPE_UPDATE = 1;
 
     private enum RecStatus{
         Waiting,
@@ -68,8 +48,7 @@ public class RecognizerActivity extends BaseActivity {
 
         mButton = findViewById(R.id.btnButton);
         mButton.setText("开  始");
-
-        mTextView.setText("OFF");
+        mButton.setBackgroundColor(getResources().getColor(R.color.themeBlueColor));
 
         mButton.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -77,11 +56,11 @@ public class RecognizerActivity extends BaseActivity {
                 switch (motionEvent.getAction()){
                     case MotionEvent.ACTION_DOWN:
                         Log.i("ACTION","DOWN");
-                        mTextView.setText("ON");
+                        startListener();
                         return  true;
                     case MotionEvent.ACTION_UP:
                         Log.i("ACTION","UP");
-                        mTextView.setText("OFF");
+                        stopListener();
                         return true;
                 }
                 return false;
@@ -109,5 +88,46 @@ public class RecognizerActivity extends BaseActivity {
         setLightWindow();
         showBackOption();
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(mIflytekHelper != null){
+            mIflytekHelper.destroy();
+        }
+    }
+
+    private void startListener(){
+        mIflytekHelper.startListening(new IflytekHelper.RecognizerListener() {
+            @Override
+            public void preRecognize() {
+                mButton.setBackgroundColor(getResources().getColor(R.color.themeRedColor));
+                mButton.setText("录音中...");
+            }
+
+            @Override
+            public void postRecognize() {
+                mButton.setBackgroundColor(getResources().getColor(R.color.themeBlueColor));
+                mButton.setText("开  始");
+            }
+
+            @Override
+            public void onCompleted(String result) {
+                mTextView.setText(result);
+            }
+
+            @Override
+            public void onFailed(int errCode, String errDesc) {
+                CommonFun.showError(RecognizerActivity.this,
+                        errDesc + "(" + String.valueOf(errCode) + ")",
+                        false);
+            }
+        });
+    }
+
+    private void stopListener(){
+        mIflytekHelper.stopListening();
+    }
+
 
 }

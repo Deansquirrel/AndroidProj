@@ -36,25 +36,12 @@
                 android:showDividers="middle"
                 android:background="@color/whiteColor">
 
-                <!--<Button-->
-                <!--android:id="@+id/btnGet"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:text="Get"-->
-                <!--android:layout_margin="@dimen/height_margin_default"-->
-                <!--style="@style/CustomTheme.Button.Link"/>-->
-                <!--<Button-->
-                <!--android:id="@+id/btnPost"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:text="Post"-->
-                <!--android:layout_margin="@dimen/height_margin_default"-->
-                <!--style="@style/CustomTheme.Button.Link"/>-->
                 <TextView
                     android:id="@+id/textView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/height_margin_default"
+                    android:hint="语音文本显示"
                     style="@style/CustomTheme.TextView"
                     android:text="TextView" />
             </LinearLayout>

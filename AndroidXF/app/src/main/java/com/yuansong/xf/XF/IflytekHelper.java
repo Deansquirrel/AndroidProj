@@ -1,17 +1,24 @@
 package com.yuansong.xf.XF;
 
+import android.media.MediaRecorder;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
+import com.iflytek.aiui.AIUIAgent;
+import com.iflytek.aiui.AIUIEvent;
+import com.iflytek.aiui.AIUIListener;
 import com.iflytek.cloud.ErrorCode;
 import com.iflytek.cloud.InitListener;
+import com.iflytek.cloud.RecognizerListener;
+import com.iflytek.cloud.RecognizerResult;
 import com.iflytek.cloud.SpeechConstant;
 import com.iflytek.cloud.SpeechError;
 import com.iflytek.cloud.SpeechRecognizer;
 import com.iflytek.cloud.SpeechSynthesizer;
 import com.iflytek.cloud.SpeechUtility;
 import com.iflytek.cloud.SynthesizerListener;
+import com.iflytek.cloud.ui.RecognizerDialog;
 
 public class IflytekHelper {
 
@@ -20,8 +27,10 @@ public class IflytekHelper {
 
     private AppCompatActivity mActivity;
     private SpeechUtility mSpeechUtility;
-    private SpeechSynthesizer mSpeechSynthesizer;
-    private SpeechRecognizer mSpeechRecognizer;
+    private SpeechSynthesizer mSpeechSynthesizer = null;
+    private SpeechRecognizer mSpeechRecognizer = null;
+    private String recResult = null;
+    private AIUIAgent mAIUIAgent = null;
 
     public interface InitListener{
         void onSuccess();
@@ -30,8 +39,15 @@ public class IflytekHelper {
 
     public interface SpeakListener{
         void preSpeak();
-        void onCompleted();
         void postSpeak();
+        void onCompleted();
+        void onFailed(int errCode, String errDesc);
+    }
+
+    public interface RecognizerListener{
+        void preRecognize();
+        void postRecognize();
+        void onCompleted(String result);
         void onFailed(int errCode, String errDesc);
     }
 
@@ -76,9 +92,23 @@ public class IflytekHelper {
                 });
     }
 
+
+    public void InitAIUIAgent(){
+        mAIUIAgent = AIUIAgent.createAgent(mActivity.getApplicationContext(), "",
+                new AIUIListener() {
+                    @Override
+                    public void onEvent(AIUIEvent aiuiEvent) {
+
+                    }
+                });
+    }
+
     public void destroy(){
         if(mSpeechSynthesizer != null){
             mSpeechSynthesizer.destroy();
+        }
+        if(mSpeechRecognizer != null){
+            mSpeechRecognizer.destroy();
         }
         if(mSpeechUtility != null){
             mSpeechUtility.destroy();
@@ -158,5 +188,67 @@ public class IflytekHelper {
             return;
         }
         mSpeechRecognizer.setParameter(SpeechConstant.PARAMS,null);
+
+        mSpeechRecognizer.setParameter(SpeechConstant.LANGUAGE,"zh_cn");
+        mSpeechRecognizer.setParameter(SpeechConstant.ACCENT,"mandarin");
+        mSpeechRecognizer.setParameter(SpeechConstant.ENGINE_TYPE,SpeechConstant.TYPE_CLOUD);
+        mSpeechRecognizer.setParameter(SpeechConstant.VAD_BOS,"4000");
+        mSpeechRecognizer.setParameter(SpeechConstant.VAD_EOS,"1000");
+        mSpeechRecognizer.setParameter(SpeechConstant.ASR_PTT,"0");
+        mSpeechRecognizer.setParameter(SpeechConstant.AUDIO_SOURCE, String.valueOf(MediaRecorder.AudioSource.MIC));
+        mSpeechRecognizer.setParameter(SpeechConstant.RESULT_TYPE,"plain");
+        mSpeechRecognizer.setParameter(SpeechConstant.DOMAIN, "iat");
+    }
+
+    public void startListening(final IflytekHelper.RecognizerListener listener){
+        recResult = "";
+        if(listener != null){
+            listener.preRecognize();
+        }
+        mSpeechRecognizer.startListening(new com.iflytek.cloud.RecognizerListener() {
+            @Override
+            public void onVolumeChanged(int i, byte[] bytes) {
+
+            }
+
+            @Override
+            public void onBeginOfSpeech() {
+
+            }
+
+            @Override
+            public void onEndOfSpeech() {
+
+            }
+
+            @Override
+            public void onResult(RecognizerResult recognizerResult, boolean b) {
+                Log.i("msg",recognizerResult.getResultString());
+                if(recognizerResult != null){
+                    recResult = recResult + recognizerResult.getResultString();
+                }
+                if(listener != null && b == true){
+                    listener.onCompleted(recResult);
+                    listener.postRecognize();
+                }
+            }
+
+            @Override
+            public void onError(SpeechError speechError) {
+                if(listener != null){
+                    listener.onFailed(speechError.getErrorCode(),speechError.getErrorDescription());
+                    listener.postRecognize();
+                }
+            }
+
+            @Override
+            public void onEvent(int i, int i1, int i2, Bundle bundle) {
+
+            }
+        });
+    }
+
+    public void stopListening(){
+        mSpeechRecognizer.stopListening();
     }
 }

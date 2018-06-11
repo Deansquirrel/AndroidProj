@@ -25,7 +25,8 @@
 
         <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="0dp"
+            android:layout_weight="1">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -35,23 +36,50 @@
                 android:showDividers="middle"
                 android:background="@color/whiteColor">
 
-                <!--<Button-->
-                <!--android:id="@+id/btnGet"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:text="Get"-->
-                <!--android:layout_margin="@dimen/height_margin_default"-->
-                <!--style="@style/CustomTheme.Button.Link"/>-->
-                <!--<Button-->
-                <!--android:id="@+id/btnPost"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:text="Post"-->
-                <!--android:layout_margin="@dimen/height_margin_default"-->
-                <!--style="@style/CustomTheme.Button.Link"/>-->
+                <TextView
+                    android:id="@+id/textViewDesc"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/height_margin_default"
+                    android:hint="textViewDesc"
+                    style="@style/CustomTheme.TextView"
+                    android:text="TextView" />
+                <TextView
+                    android:id="@+id/textViewResult"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/height_margin_default"
+                    android:hint="textViewResult"
+                    style="@style/CustomTheme.TextView"
+                    android:text="TextView" />
             </LinearLayout>
 
         </ScrollView>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/whiteColor"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/btnSet"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/height_context_line_default"
+                android:layout_margin="@dimen/height_margin_default"
+                android:text="开  始"
+                style="@style/CustomTheme.Button"/>
+
+            <Button
+                android:id="@+id/btnClear"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/height_context_line_default"
+                android:layout_margin="@dimen/height_margin_default"
+                android:text="重  置"
+                style="@style/CustomTheme.Button"/>
+
+        </LinearLayout>
 
 
     </LinearLayout>
