@@ -21,23 +21,12 @@ public class RecognizerActivity extends BaseActivity {
     private TextView mTextView = null;
     private Button mButton = null;
 
-    private RecStatus status = null;
-
     private IflytekHelper mIflytekHelper = null;
-
-    private enum RecStatus{
-        Waiting,
-        Recording,
-        Translating,
-        Speaking
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recognizer);
-
-        status = RecStatus.Waiting;
 
         mToolbar = findViewById(R.id.toolbar);
         mToolbar.setTitle("语音听写");

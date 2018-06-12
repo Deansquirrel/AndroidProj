@@ -3,12 +3,15 @@ package com.yuansong.xf.Activity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
 import com.yuansong.xf.BaseActivity;
+import com.yuansong.xf.Common.CommonFun;
 import com.yuansong.xf.R;
+import com.yuansong.xf.XF.IflytekHelper;
 
 public class AIUIActivity extends BaseActivity {
 
@@ -18,6 +21,8 @@ public class AIUIActivity extends BaseActivity {
     private TextView mTextViewResult = null;
     private Button mBtnSet = null;
     private Button mBtnClear = null;
+
+    private IflytekHelper mIflytekHelper = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +68,24 @@ public class AIUIActivity extends BaseActivity {
                 mTextViewResult.setVisibility(View.GONE);
                 mBtnSet.setVisibility(View.VISIBLE);
                 mBtnClear.setVisibility(View.GONE);
+            }
+        });
+
+        mBtnSet.setEnabled(false);
+        mIflytekHelper = new IflytekHelper(AIUIActivity.this);
+        mIflytekHelper.InitAIUIAgent(new IflytekHelper.InitListener() {
+            @Override
+            public void onSuccess() {
+                Log.i("msg","语义理解初始化成功");
+                mBtnSet.setEnabled(true);
+            }
+
+            @Override
+            public void onFailed(int errCode) {
+                String msg = "语义理解初始化失败（" + String.valueOf(errCode) + "）";
+                CommonFun.showMsg(AIUIActivity.this,msg);
+                Log.i("err",msg);
+                AIUIActivity.this.finish();
             }
         });
 

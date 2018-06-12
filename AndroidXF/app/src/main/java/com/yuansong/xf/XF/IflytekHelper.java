@@ -1,13 +1,16 @@
 package com.yuansong.xf.XF;
 
+import android.app.Activity;
 import android.media.MediaRecorder;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import com.iflytek.aiui.AIUIAgent;
+import com.iflytek.aiui.AIUIConstant;
 import com.iflytek.aiui.AIUIEvent;
 import com.iflytek.aiui.AIUIListener;
+import com.iflytek.aiui.AIUIMessage;
 import com.iflytek.cloud.ErrorCode;
 import com.iflytek.cloud.InitListener;
 import com.iflytek.cloud.RecognizerListener;
@@ -20,23 +23,33 @@ import com.iflytek.cloud.SpeechUtility;
 import com.iflytek.cloud.SynthesizerListener;
 import com.iflytek.cloud.ui.RecognizerDialog;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+
 public class IflytekHelper {
 
     private static final String APPID = "5b14de4c";
     private static final String VOICE_NAME = "xiaoyan";
 
-    private AppCompatActivity mActivity;
+    private Activity mActivity;
     private SpeechUtility mSpeechUtility;
     private SpeechSynthesizer mSpeechSynthesizer = null;
     private SpeechRecognizer mSpeechRecognizer = null;
     private String recResult = null;
     private AIUIAgent mAIUIAgent = null;
 
+    /**
+     * 初始化回调接口
+     */
     public interface InitListener{
         void onSuccess();
         void onFailed(int errCode);
     }
 
+    /**
+     * 在线语音合成回调接口
+     */
     public interface SpeakListener{
         void preSpeak();
         void postSpeak();
@@ -44,6 +57,9 @@ public class IflytekHelper {
         void onFailed(int errCode, String errDesc);
     }
 
+    /**
+     * 语音识别回调接口
+     */
     public interface RecognizerListener{
         void preRecognize();
         void postRecognize();
@@ -51,54 +67,91 @@ public class IflytekHelper {
         void onFailed(int errCode, String errDesc);
     }
 
-    public IflytekHelper(AppCompatActivity activity){
+    /**
+     * 构造函数
+     * @param activity 调用的Activity
+     */
+    public IflytekHelper(Activity activity){
         mActivity = activity;
         mSpeechUtility = SpeechUtility.createUtility(activity.getApplicationContext(),"appid=" + APPID);
     }
 
+    /**
+     * 在线语音合成 初始化
+     * @param listener
+     */
     public void InitSynthesizer(final IflytekHelper.InitListener listener){
         mSpeechSynthesizer = SpeechSynthesizer.createSynthesizer(mActivity.getApplicationContext(),
                 new com.iflytek.cloud.InitListener() {
                     @Override
                     public void onInit(int errCode) {
                         if(errCode == ErrorCode.SUCCESS){
-                            listener.onSuccess();
+                            if(listener != null){
+                                listener.onSuccess();
+                            }
                             setSynthesizerParams();
                         }
                         else{
                             IflytekHelper.this.destroy();
-                            listener.onFailed(errCode);
+                            if(listener != null){
+                                listener.onFailed(errCode);
+                            }
                             mSpeechSynthesizer = null;
                         }
                     }
                 });
     }
 
+    /**
+     * 语音识别 初始化
+     * @param listener
+     */
     public void InitRecognizer(final IflytekHelper.InitListener listener){
         mSpeechRecognizer = SpeechRecognizer.createRecognizer(mActivity.getApplicationContext(),
                 new com.iflytek.cloud.InitListener() {
                     @Override
                     public void onInit(int errCode) {
                         if(errCode == ErrorCode.SUCCESS){
-                            listener.onSuccess();
+                            if(listener != null){
+                                listener.onSuccess();
+                            }
                             setRecognizerParams();
                         }
                         else{
                             IflytekHelper.this.destroy();
-                            listener.onFailed(errCode);
+                            if(listener != null){
+                                listener.onFailed(errCode);
+                            }
                             mSpeechRecognizer = null;
                         }
                     }
                 });
     }
 
-
-    public void InitAIUIAgent(){
-        mAIUIAgent = AIUIAgent.createAgent(mActivity.getApplicationContext(), "",
+    /**
+     * 语义识别 初始化
+     */
+    public void InitAIUIAgent(final IflytekHelper.InitListener listener){
+        mAIUIAgent = AIUIAgent.createAgent(mActivity.getApplicationContext(),
+                getAIUIparams(),
                 new AIUIListener() {
                     @Override
                     public void onEvent(AIUIEvent aiuiEvent) {
-
+                        Log.i("msg","----------------------------------------------");
+                        Log.i("aiuiEvent",String.valueOf(aiuiEvent.eventType));
+                        Log.i("msg","----------------------------------------------");
+                        switch (aiuiEvent.eventType){
+                            case AIUIConstant.EVENT_RESULT:
+                                if(listener != null){
+                                    listener.onSuccess();
+                                }
+                                break;
+                            case AIUIConstant.EVENT_ERROR:
+                                if(listener != null){
+                                    listener.onFailed(aiuiEvent.arg1);
+                                }
+                                break;
+                        }
                     }
                 });
     }
@@ -109,6 +162,9 @@ public class IflytekHelper {
         }
         if(mSpeechRecognizer != null){
             mSpeechRecognizer.destroy();
+        }
+        if(mAIUIAgent != null){
+            mAIUIAgent.destroy();
         }
         if(mSpeechUtility != null){
             mSpeechUtility.destroy();
@@ -250,5 +306,46 @@ public class IflytekHelper {
 
     public void stopListening(){
         mSpeechRecognizer.stopListening();
+    }
+
+    private String getAIUIparams(){
+        Map<String,String> params = new HashMap();
+//        params.put("scene","main");
+//        params.put("interact_timeout","60000");
+//        params.put("result_timeout","5000");
+//        params.put("engine_type","meta");
+//        params.put("res_type","assets");
+//        params.put("res_path","");
+//        params.put("sample_rate","16000");
+//        params.put("data_source","sdk");
+//        params.put("interact_mode",mActivity.getApplicationContext().getPackageResourcePath() +
+//                "meta_vad_16k.jet");
+//        params.put("","");
+//        params.put("","");
+
+        StringBuilder strResult = new StringBuilder();
+        strResult.append("");
+        for (String key:params.keySet()) {
+            strResult.append(key + "=" + params.get(key) + ";");
+        }
+        return strResult.toString();
+    }
+
+    private void startAIUISerivce(){
+        AIUIMessage startMsg = new AIUIMessage(AIUIConstant.CMD_START,
+                0,
+                0,
+                null,
+                null);
+        mAIUIAgent.sendMessage(startMsg);
+    }
+
+    private void stopAIUISerivce(){
+        AIUIMessage stopMsg = new AIUIMessage(AIUIConstant.CMD_STOP,
+                0,
+                0,
+                null,
+                null);
+        mAIUIAgent.sendMessage(stopMsg);
     }
 }
