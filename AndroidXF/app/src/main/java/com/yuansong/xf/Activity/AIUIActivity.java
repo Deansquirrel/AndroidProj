@@ -35,11 +35,11 @@ public class AIUIActivity extends BaseActivity {
 
         mTextViewDesc = findViewById(R.id.textViewDesc);
         mTextViewDesc.setVisibility(View.VISIBLE);
-        StringBuffer strBuffer = new StringBuffer()
-                .append("可用技能：")
+        StringBuilder strBuilder = new StringBuilder();
+        strBuilder.append("可用技能：")
                 .append("\n")
                 .append("  显示{Number}号桌菜品");
-        mTextViewDesc.setText(strBuffer.toString());
+        mTextViewDesc.setText(strBuilder.toString());
 
         mTextViewResult = findViewById(R.id.textViewResult);
         mTextViewResult.setVisibility(View.GONE);
@@ -54,6 +54,28 @@ public class AIUIActivity extends BaseActivity {
                 mTextViewResult.setVisibility(View.VISIBLE);
                 mBtnSet.setVisibility(View.GONE);
                 mBtnClear.setVisibility(View.VISIBLE);
+//                mIflytekHelper.understand();
+                mIflytekHelper.understandText("显示6桌菜品", new IflytekHelper.TextUnderstanderListener() {
+                    @Override
+                    public void preUnderstand() {
+
+                    }
+
+                    @Override
+                    public void postUnderstand() {
+
+                    }
+
+                    @Override
+                    public void onCompleted(String result) {
+                        Log.i("result",result);
+                    }
+
+                    @Override
+                    public void onFailed(int errCode, String errDesc) {
+                        Log.i("err",String.valueOf(errCode) + " | " + errDesc);
+                    }
+                });
             }
         });
 
@@ -64,7 +86,7 @@ public class AIUIActivity extends BaseActivity {
             @Override
             public void onClick(View view) {
                 mTextViewDesc.setVisibility(View.VISIBLE);
-                mTextViewResult.setText("TEST");
+                mTextViewResult.setText("");
                 mTextViewResult.setVisibility(View.GONE);
                 mBtnSet.setVisibility(View.VISIBLE);
                 mBtnClear.setVisibility(View.GONE);
@@ -73,23 +95,71 @@ public class AIUIActivity extends BaseActivity {
 
         mBtnSet.setEnabled(false);
         mIflytekHelper = new IflytekHelper(AIUIActivity.this);
-        mIflytekHelper.InitAIUIAgent(new IflytekHelper.InitListener() {
+        mIflytekHelper.InitTextUnderstander(new IflytekHelper.InitListener() {
             @Override
             public void onSuccess() {
-                Log.i("msg","语义理解初始化成功");
+                Log.i("msg","语义理解（文本）初始化成功");
                 mBtnSet.setEnabled(true);
             }
 
             @Override
             public void onFailed(int errCode) {
-                String msg = "语义理解初始化失败（" + String.valueOf(errCode) + "）";
-                CommonFun.showMsg(AIUIActivity.this,msg);
+                String msg = "语义理解（文本）初始化失败（" + String.valueOf(errCode) + "）";
                 Log.i("err",msg);
-                AIUIActivity.this.finish();
+                CommonFun.showError(AIUIActivity.this,msg,true);
             }
         });
+        mIflytekHelper.InitSpeechUnderstander(new IflytekHelper.InitListener() {
+            @Override
+            public void onSuccess() {
+                Log.i("msg","语义理解（语音）初始化成功");
+                mBtnSet.setEnabled(true);
+            }
+
+            @Override
+            public void onFailed(int errCode) {
+                String msg = "语义理解（语音）初始化失败（" + String.valueOf(errCode) + "）";
+                Log.i("err",msg);
+                CommonFun.showError(AIUIActivity.this,msg,true);
+            }
+        });
+//        mIflytekHelper.InitAIUIAgent(new IflytekHelper.AIUIListener() {
+//            @Override
+//            public void onInitSuccess() {
+//                Log.i("msg","语义理解初始化成功");
+//                mBtnSet.setEnabled(true);
+//            }
+//
+//            @Override
+//            public void onInitFailed(int errCode, String errDesc) {
+//                String msg = "语义理解初始化失败（" + String.valueOf(errCode) + "|" + errDesc + "）";
+//                Log.i("err",msg);
+//                CommonFun.showError(AIUIActivity.this,msg,true);
+//            }
+//
+//            @Override
+//            public void onStateChanged(IflytekHelper.AIUIServiceState state) {
+//
+//            }
+//
+//            @Override
+//            public void onError(int errCode, String errDesc) {
+//                String msg = "语义理解遇到错误（" + String.valueOf(errCode) + "|" + errDesc + "）";
+//                Log.i("err",msg);
+//                CommonFun.showError(AIUIActivity.this,msg,true);
+//            }
+//
+//        });
 
         setLightWindow();
         showBackOption();
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mIflytekHelper.destroy();
+    }
+
+
 }

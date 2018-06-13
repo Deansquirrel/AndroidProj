@@ -3,29 +3,28 @@ package com.yuansong.xf.XF;
 import android.app.Activity;
 import android.media.MediaRecorder;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
+import com.google.gson.Gson;
 import com.iflytek.aiui.AIUIAgent;
 import com.iflytek.aiui.AIUIConstant;
 import com.iflytek.aiui.AIUIEvent;
-import com.iflytek.aiui.AIUIListener;
 import com.iflytek.aiui.AIUIMessage;
 import com.iflytek.cloud.ErrorCode;
 import com.iflytek.cloud.InitListener;
-import com.iflytek.cloud.RecognizerListener;
 import com.iflytek.cloud.RecognizerResult;
 import com.iflytek.cloud.SpeechConstant;
 import com.iflytek.cloud.SpeechError;
 import com.iflytek.cloud.SpeechRecognizer;
 import com.iflytek.cloud.SpeechSynthesizer;
+import com.iflytek.cloud.SpeechUnderstander;
 import com.iflytek.cloud.SpeechUtility;
 import com.iflytek.cloud.SynthesizerListener;
-import com.iflytek.cloud.ui.RecognizerDialog;
+import com.iflytek.cloud.TextUnderstander;
+import com.iflytek.cloud.TextUnderstanderListener;
+import com.iflytek.cloud.UnderstanderResult;
 
 import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
 
 public class IflytekHelper {
 
@@ -37,7 +36,27 @@ public class IflytekHelper {
     private SpeechSynthesizer mSpeechSynthesizer = null;
     private SpeechRecognizer mSpeechRecognizer = null;
     private String recResult = null;
-    private AIUIAgent mAIUIAgent = null;
+
+    private TextUnderstander mTextUnderstander = null;
+    private SpeechUnderstander mSpeechUnderstander = null;
+
+
+//    private AIUIAgent mAIUIAgent = null;
+
+
+//    private AIUIEventType mAIUIEventType = AIUIEventType.None;
+//    private enum AIUIEventType{
+//        None,
+//        InitCheck,
+//        Understand
+//    }
+//    private AIUIServiceState mAIUIServiceState = AIUIServiceState.STATE_NONE;
+//    public enum AIUIServiceState{
+//        STATE_NONE,
+//        STATE_IDLE,
+//        STATE_READY,
+//        STATE_WORKING
+//    }
 
     /**
      * 初始化回调接口
@@ -67,6 +86,23 @@ public class IflytekHelper {
         void onFailed(int errCode, String errDesc);
     }
 
+    public interface TextUnderstanderListener{
+        void preUnderstand();
+        void postUnderstand();
+        void onCompleted(String result);
+        void onFailed(int errCode, String errDesc);
+    }
+
+//    /**
+//     * 语义理解回调接口
+//     */
+//    public interface AIUIListener{
+//        void onInitSuccess();
+//        void onInitFailed(int errCode, String errDesc);
+//        void onStateChanged(AIUIServiceState state);
+//        void onError(int errCode, String errDesc);
+//    }
+
     /**
      * 构造函数
      * @param activity 调用的Activity
@@ -86,13 +122,12 @@ public class IflytekHelper {
                     @Override
                     public void onInit(int errCode) {
                         if(errCode == ErrorCode.SUCCESS){
+                            setSynthesizerParams();
                             if(listener != null){
                                 listener.onSuccess();
                             }
-                            setSynthesizerParams();
                         }
                         else{
-                            IflytekHelper.this.destroy();
                             if(listener != null){
                                 listener.onFailed(errCode);
                             }
@@ -112,13 +147,12 @@ public class IflytekHelper {
                     @Override
                     public void onInit(int errCode) {
                         if(errCode == ErrorCode.SUCCESS){
+                            setRecognizerParams();
                             if(listener != null){
                                 listener.onSuccess();
                             }
-                            setRecognizerParams();
                         }
                         else{
-                            IflytekHelper.this.destroy();
                             if(listener != null){
                                 listener.onFailed(errCode);
                             }
@@ -129,32 +163,119 @@ public class IflytekHelper {
     }
 
     /**
-     * 语义识别 初始化
+     * 语义理解（文本）
+     * @param listener
      */
-    public void InitAIUIAgent(final IflytekHelper.InitListener listener){
-        mAIUIAgent = AIUIAgent.createAgent(mActivity.getApplicationContext(),
-                getAIUIparams(),
-                new AIUIListener() {
+    public void InitTextUnderstander(final IflytekHelper.InitListener listener){
+        mTextUnderstander = TextUnderstander.createTextUnderstander(mActivity.getApplicationContext(),
+                new com.iflytek.cloud.InitListener() {
                     @Override
-                    public void onEvent(AIUIEvent aiuiEvent) {
-                        Log.i("msg","----------------------------------------------");
-                        Log.i("aiuiEvent",String.valueOf(aiuiEvent.eventType));
-                        Log.i("msg","----------------------------------------------");
-                        switch (aiuiEvent.eventType){
-                            case AIUIConstant.EVENT_RESULT:
-                                if(listener != null){
-                                    listener.onSuccess();
-                                }
-                                break;
-                            case AIUIConstant.EVENT_ERROR:
-                                if(listener != null){
-                                    listener.onFailed(aiuiEvent.arg1);
-                                }
-                                break;
+                    public void onInit(int errCode) {
+                        if(errCode == ErrorCode.SUCCESS){
+                            setTextUnderstanderParams();
+                            if(listener != null){
+                                listener.onSuccess();
+                            }
+                        }
+                        else{
+                            if(listener != null){
+                                listener.onFailed(errCode);
+                            }
+                            mTextUnderstander = null;
                         }
                     }
                 });
     }
+
+    /**
+     * 语义理解（语音）
+     * @param listener
+     */
+    public void InitSpeechUnderstander(final IflytekHelper.InitListener listener){
+        mSpeechUnderstander = SpeechUnderstander.createUnderstander(mActivity.getApplicationContext(),
+                new com.iflytek.cloud.InitListener() {
+                    @Override
+                    public void onInit(int errCode) {
+                        if(errCode == ErrorCode.SUCCESS){
+                            setSpeechUnderstanderParams();
+                            if(listener != null){
+                                listener.onSuccess();
+                            }
+                        }
+                        else{
+                            if(listener != null){
+                                listener.onFailed(errCode);
+                            }
+                            mSpeechUnderstander = null;
+                        }
+                    }
+                });
+    }
+
+//    /**
+//     * 语义识别 初始化
+//     */
+//    public void InitAIUIAgent(final IflytekHelper.AIUIListener listener){
+//        mAIUIEventType = AIUIEventType.InitCheck;
+//        mAIUIAgent = AIUIAgent.createAgent(mActivity.getApplicationContext(),
+//                getAIUIparams(),
+//                new com.iflytek.aiui.AIUIListener() {
+//                    @Override
+//                    public void onEvent(AIUIEvent aiuiEvent) {
+//                        Log.i("event",String.valueOf(aiuiEvent.eventType));
+//                        switch (aiuiEvent.eventType){
+//                            case AIUIConstant.EVENT_RESULT:
+//                                Log.i("result","--------------------------------------");
+//                                Log.i("arg1",String.valueOf(aiuiEvent.arg1));
+//                                Log.i("arg2",String.valueOf(aiuiEvent.arg2));
+//                                Log.i("info",aiuiEvent.info);
+//                                Log.i("data",aiuiEvent.data.toString());
+//                                Log.i("result","--------------------------------------");
+//                                break;
+//                            case AIUIConstant.EVENT_STATE:
+//                                switch (aiuiEvent.arg1){
+//                                    case AIUIConstant.STATE_IDLE:
+//                                        Log.i("state","STATE_IDLE");
+//                                        mAIUIServiceState = AIUIServiceState.STATE_IDLE;
+//                                        if(listener != null){
+//                                            listener.onStateChanged(AIUIServiceState.STATE_IDLE);
+//                                        }
+//                                        break;
+//                                    case AIUIConstant.STATE_READY:
+//                                        Log.i("state","STATE_READY");
+//                                        mAIUIServiceState = AIUIServiceState.STATE_READY;
+//                                        if(listener != null){
+//                                            if(mAIUIEventType == AIUIEventType.InitCheck){
+//                                                mAIUIEventType = AIUIEventType.None;
+//                                                listener.onInitSuccess();
+//                                            }
+//                                            listener.onStateChanged(AIUIServiceState.STATE_READY);
+//                                        }
+//                                        break;
+//                                    case AIUIConstant.STATE_WORKING:
+//                                        Log.i("state","STATE_WORKING");
+//                                        mAIUIServiceState = AIUIServiceState.STATE_WORKING;
+//                                        if(listener != null){
+//                                            listener.onStateChanged(AIUIServiceState.STATE_WORKING);
+//                                        }
+//                                        break;
+//                                }
+//                                break;
+//                            case AIUIConstant.EVENT_ERROR:
+//                                if(listener != null){
+//                                    if(mAIUIEventType == AIUIEventType.InitCheck){
+//                                        mAIUIEventType = AIUIEventType.None;
+//                                        listener.onInitFailed(aiuiEvent.arg1,aiuiEvent.info);
+//                                    }
+//                                    else{
+//                                        listener.onError(aiuiEvent.arg1,aiuiEvent.info);
+//                                    }
+//                                }
+//                                break;
+//                        }
+//                    }
+//                });
+//    }
 
     public void destroy(){
         if(mSpeechSynthesizer != null){
@@ -163,12 +284,89 @@ public class IflytekHelper {
         if(mSpeechRecognizer != null){
             mSpeechRecognizer.destroy();
         }
-        if(mAIUIAgent != null){
-            mAIUIAgent.destroy();
+//        if(mAIUIAgent != null){
+//            mAIUIAgent.destroy();
+//        }
+        if(mTextUnderstander != null){
+            mTextUnderstander.destroy();
+        }
+        if(mSpeechUnderstander != null){
+            mSpeechUnderstander.destroy();
         }
         if(mSpeechUtility != null){
             mSpeechUtility.destroy();
         }
+    }
+
+
+    private void setSynthesizerParams(){
+        if(mSpeechSynthesizer == null){
+            return;
+        }
+        mSpeechSynthesizer.setParameter(SpeechConstant.PARAMS,null);
+
+        mSpeechSynthesizer.setParameter(SpeechConstant.VOICE_NAME,this.VOICE_NAME);
+        mSpeechSynthesizer.setParameter(SpeechConstant.SPEED,"50");
+        mSpeechSynthesizer.setParameter(SpeechConstant.VOLUME,"50");
+        mSpeechSynthesizer.setParameter(SpeechConstant.PITCH,  "50");
+
+        mSpeechSynthesizer.setParameter(SpeechConstant.ENGINE_TYPE,SpeechConstant.TYPE_CLOUD);
+
+        mSpeechSynthesizer.setParameter(SpeechConstant.KEY_REQUEST_FOCUS, "true");
+    }
+
+    private void setRecognizerParams(){
+        if(mSpeechRecognizer == null){
+            return;
+        }
+        mSpeechRecognizer.setParameter(SpeechConstant.PARAMS,null);
+
+        mSpeechRecognizer.setParameter(SpeechConstant.LANGUAGE,"zh_cn");
+        mSpeechRecognizer.setParameter(SpeechConstant.ACCENT,"mandarin");
+        mSpeechRecognizer.setParameter(SpeechConstant.ENGINE_TYPE,SpeechConstant.TYPE_CLOUD);
+        mSpeechRecognizer.setParameter(SpeechConstant.VAD_BOS,"4000");
+        mSpeechRecognizer.setParameter(SpeechConstant.VAD_EOS,"10000");
+        mSpeechRecognizer.setParameter(SpeechConstant.ASR_PTT,"0");
+        mSpeechRecognizer.setParameter(SpeechConstant.AUDIO_SOURCE, String.valueOf(MediaRecorder.AudioSource.MIC));
+        mSpeechRecognizer.setParameter(SpeechConstant.RESULT_TYPE,"plain");
+        mSpeechRecognizer.setParameter(SpeechConstant.DOMAIN, "iat");
+    }
+
+    private void setTextUnderstanderParams(){
+        if(mTextUnderstander == null){
+            return;
+        }
+        mTextUnderstander.setParameter(SpeechConstant.PARAMS,null);
+
+        mTextUnderstander.setParameter(SpeechConstant.SCENE,"main");
+        mTextUnderstander.setParameter(SpeechConstant.NET_TIMEOUT,"20000");
+        mTextUnderstander.setParameter(SpeechConstant.LANGUAGE,"zh_cn");
+        mTextUnderstander.setParameter(SpeechConstant.ACCENT,"mandarin");
+        mTextUnderstander.setParameter(SpeechConstant.DOMAIN, "iat");
+        mTextUnderstander.setParameter(SpeechConstant.RESULT_TYPE,"json");
+        mTextUnderstander.setParameter(SpeechConstant.ENGINE_TYPE,"cloud");
+    }
+
+    private void setSpeechUnderstanderParams(){
+        if(mSpeechUnderstander == null){
+            return;
+        }
+        mSpeechUnderstander.setParameter(SpeechConstant.PARAMS,null);
+
+        mSpeechUnderstander.setParameter(SpeechConstant.SCENE,"main");
+        mSpeechUnderstander.setParameter(SpeechConstant.NLP_VERSION,"3.0");
+        mSpeechUnderstander.setParameter(SpeechConstant.NET_TIMEOUT,"20000");
+        mSpeechUnderstander.setParameter(SpeechConstant.KEY_SPEECH_TIMEOUT,"60000");
+        mSpeechUnderstander.setParameter(SpeechConstant.LANGUAGE,"zh_cn");
+        mSpeechUnderstander.setParameter(SpeechConstant.ACCENT,"mandarin");
+        mSpeechUnderstander.setParameter(SpeechConstant.DOMAIN, "iat");
+        mSpeechUnderstander.setParameter(SpeechConstant.AUDIO_SOURCE, String.valueOf(MediaRecorder.AudioSource.MIC));
+        mSpeechUnderstander.setParameter(SpeechConstant.VAD_BOS,"4000");
+        mSpeechUnderstander.setParameter(SpeechConstant.VAD_EOS,"10000");
+        mSpeechUnderstander.setParameter(SpeechConstant.VAD_ENABLE,"1");
+        mSpeechUnderstander.setParameter(SpeechConstant.SAMPLE_RATE,"16000");
+        mSpeechUnderstander.setParameter(SpeechConstant.RESULT_TYPE,"json");
+        mSpeechUnderstander.setParameter(SpeechConstant.ENGINE_TYPE,"cloud");
     }
 
     public void speak(String msg, final SpeakListener listener){
@@ -223,39 +421,6 @@ public class IflytekHelper {
         });
     }
 
-    private void setSynthesizerParams(){
-        if(mSpeechSynthesizer == null){
-            return;
-        }
-        mSpeechSynthesizer.setParameter(SpeechConstant.PARAMS,null);
-
-        mSpeechSynthesizer.setParameter(SpeechConstant.VOICE_NAME,this.VOICE_NAME);
-        mSpeechSynthesizer.setParameter(SpeechConstant.SPEED,"50");
-        mSpeechSynthesizer.setParameter(SpeechConstant.VOLUME,"50");
-        mSpeechSynthesizer.setParameter(SpeechConstant.PITCH,  "50");
-
-        mSpeechSynthesizer.setParameter(SpeechConstant.ENGINE_TYPE,SpeechConstant.TYPE_CLOUD);
-
-        mSpeechSynthesizer.setParameter(SpeechConstant.KEY_REQUEST_FOCUS, "true");
-    }
-
-    private void setRecognizerParams(){
-        if(mSpeechRecognizer == null){
-            return;
-        }
-        mSpeechRecognizer.setParameter(SpeechConstant.PARAMS,null);
-
-        mSpeechRecognizer.setParameter(SpeechConstant.LANGUAGE,"zh_cn");
-        mSpeechRecognizer.setParameter(SpeechConstant.ACCENT,"mandarin");
-        mSpeechRecognizer.setParameter(SpeechConstant.ENGINE_TYPE,SpeechConstant.TYPE_CLOUD);
-        mSpeechRecognizer.setParameter(SpeechConstant.VAD_BOS,"4000");
-        mSpeechRecognizer.setParameter(SpeechConstant.VAD_EOS,"1000");
-        mSpeechRecognizer.setParameter(SpeechConstant.ASR_PTT,"0");
-        mSpeechRecognizer.setParameter(SpeechConstant.AUDIO_SOURCE, String.valueOf(MediaRecorder.AudioSource.MIC));
-        mSpeechRecognizer.setParameter(SpeechConstant.RESULT_TYPE,"plain");
-        mSpeechRecognizer.setParameter(SpeechConstant.DOMAIN, "iat");
-    }
-
     public void startListening(final IflytekHelper.RecognizerListener listener){
         recResult = "";
         if(listener != null){
@@ -308,44 +473,138 @@ public class IflytekHelper {
         mSpeechRecognizer.stopListening();
     }
 
-    private String getAIUIparams(){
-        Map<String,String> params = new HashMap();
-//        params.put("scene","main");
-//        params.put("interact_timeout","60000");
-//        params.put("result_timeout","5000");
-//        params.put("engine_type","meta");
-//        params.put("res_type","assets");
-//        params.put("res_path","");
-//        params.put("sample_rate","16000");
-//        params.put("data_source","sdk");
-//        params.put("interact_mode",mActivity.getApplicationContext().getPackageResourcePath() +
-//                "meta_vad_16k.jet");
-//        params.put("","");
-//        params.put("","");
-
-        StringBuilder strResult = new StringBuilder();
-        strResult.append("");
-        for (String key:params.keySet()) {
-            strResult.append(key + "=" + params.get(key) + ";");
+    public void understandText(String msg, final TextUnderstanderListener listener){
+        if(listener != null){
+            listener.preUnderstand();
         }
-        return strResult.toString();
+        mTextUnderstander.understandText(msg, new com.iflytek.cloud.TextUnderstanderListener() {
+            @Override
+            public void onResult(UnderstanderResult understanderResult) {
+                if(listener != null){
+                    listener.onCompleted(understanderResult.getResultString());
+                    listener.postUnderstand();
+                }
+            }
+            @Override
+            public void onError(SpeechError speechError) {
+                if(listener != null){
+                    listener.onFailed(speechError.getErrorCode(),speechError.getErrorDescription());
+                    listener.postUnderstand();
+                }
+            }
+        });
     }
 
-    private void startAIUISerivce(){
-        AIUIMessage startMsg = new AIUIMessage(AIUIConstant.CMD_START,
-                0,
-                0,
-                null,
-                null);
-        mAIUIAgent.sendMessage(startMsg);
-    }
+//    public void understand(String msg){
+////        if(mAIUIServiceState != AIUIServiceState.STATE_WORKING){
+////            wakeupAIUIService();
+////        }
+////        String params = "data_type=text";
+////        byte[] textData = msg.getBytes();
+////        AIUIMessage textMsg = new AIUIMessage(AIUIConstant.CMD_WRITE
+////                , 0
+////                , 0
+////                , params
+////                , textData);
+////        mAIUIAgent.sendMessage(textMsg);
+//    }
+//
+//    public void understand(){
+//
+//    }
 
-    private void stopAIUISerivce(){
-        AIUIMessage stopMsg = new AIUIMessage(AIUIConstant.CMD_STOP,
-                0,
-                0,
-                null,
-                null);
-        mAIUIAgent.sendMessage(stopMsg);
-    }
+//    private String getAIUIparams(){
+//        HashMap<String,Object> strParams = new HashMap<>();
+//        HashMap<String,String> param;
+//
+//        param = new HashMap<>();
+//        param.put("appid",APPID);
+//        strParams.put("login",param);
+//
+//        param = new HashMap<>();
+//        param.put("interact_timeout","60000");
+//        param.put("result_timeout","5000");
+//        strParams.put("interact",param);
+//
+//        param = new HashMap<>();
+//        param.put("scene","main");
+//        strParams.put("global",param);
+//
+//        param = new HashMap<>();
+//        param.put("res_type","assets");
+//        param.put("res_path","vad/meta_vad_16k.jet");
+//        strParams.put("vad",param);
+//
+//        param = new HashMap<>();
+//        param.put("sample_rate","16000");
+//        strParams.put("iat",param);
+//
+//        param = new HashMap<>();
+//        param.put("data_source","sdk");
+//        param.put("interact_mode","continuous");
+//        strParams.put("speech",param);
+//
+//        Gson gson = new Gson();
+//        Log.i("params",gson.toJson(strParams));
+//        return gson.toJson(strParams);
+//
+////        Map<String,String> params = new HashMap();
+//////        params.put("scene","main");
+//////        params.put("interact_timeout","60000");
+//////        params.put("result_timeout","5000");
+//////        params.put("engine_type","meta");
+//////        params.put("res_type","assets");
+//////        params.put("res_path","");
+//////        params.put("sample_rate","16000");
+//////        params.put("data_source","sdk");
+//////        params.put("interact_mode",mActivity.getApplicationContext().getPackageResourcePath() +
+//////                "meta_vad_16k.jet");
+//////        params.put("","");
+//////        params.put("","");
+////
+////        StringBuilder strResult = new StringBuilder();
+////        strResult.append("");
+////        for (String key:params.keySet()) {
+////            strResult.append(key + "=" + params.get(key) + ";");
+////            Log.i("params",strResult.toString());
+////        }
+////        return strResult.toString();
+////        return "";
+//    }
+
+//    private void startAIUISerivce(){
+//        AIUIMessage startMsg = new AIUIMessage(AIUIConstant.CMD_START,
+//                0,
+//                0,
+//                null,
+//                null);
+//        mAIUIAgent.sendMessage(startMsg);
+//    }
+//
+//    private void wakeupAIUIService(){
+//        AIUIMessage wakeupMsg = new AIUIMessage(AIUIConstant.CMD_WAKEUP
+//                    , 0
+//                    , 0
+//                    , ""
+//                    , null);
+//        mAIUIAgent.sendMessage(wakeupMsg);
+//    }
+//
+//    private void stopAIUISerivce(){
+//        AIUIMessage stopMsg = new AIUIMessage(AIUIConstant.CMD_STOP,
+//                0,
+//                0,
+//                null,
+//                null);
+//        mAIUIAgent.sendMessage(stopMsg);
+//    }
+//
+//    private void getAiuiServiceState(){
+//        AIUIMessage getStateMsg = new AIUIMessage(AIUIConstant.CMD_GET_STATE,
+//                0,
+//                0,
+//                null,
+//                null);
+//        mAIUIAgent.sendMessage(getStateMsg);
+//    }
 }
