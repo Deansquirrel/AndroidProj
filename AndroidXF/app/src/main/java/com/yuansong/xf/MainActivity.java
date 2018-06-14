@@ -8,6 +8,7 @@ import android.widget.Button;
 import com.yuansong.xf.Activity.AIUIActivity;
 import com.yuansong.xf.Activity.RecognizerActivity;
 import com.yuansong.xf.Activity.SynthesizerActivity;
+import com.yuansong.xf.Activity.UnderstanderActivity;
 import com.yuansong.xf.Common.CommonFun;
 
 public class MainActivity extends BaseActivity {
@@ -48,7 +49,7 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onClick(View view) {
 //                CommonFun.showMsg(MainActivity.this,"语义理解");
-                CommonFun.showActivity(MainActivity.this, AIUIActivity.class,false);
+                CommonFun.showActivity(MainActivity.this, UnderstanderActivity.class,false);
             }
         });
 

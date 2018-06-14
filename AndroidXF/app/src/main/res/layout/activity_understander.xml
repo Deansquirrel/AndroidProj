@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Activity.SynthesizerActivity">
+    tools:context=".Activity.UnderstanderActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -16,9 +16,8 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/height_actionbar_activity"
             style="@style/CustomTheme.Toolbar.Light"
-            app:title="在线语音合成"
+            app:title="语义理解"
             />
-
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
@@ -28,45 +27,30 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
+            <!--android:dividerHeight="1dp"-->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
+                android:divider="@drawable/shape"
+                android:showDividers="middle"
                 android:background="@color/whiteColor">
-
-                <Space
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/height_margin_default" />
-
-                <EditText
-                    android:id="@+id/editText"
+                <Button
+                    android:id="@+id/btnText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="合成内容"
-                    style="@style/CustomTheme.EditText"
-                    android:inputType="textMultiLine"
-                    android:minLines="1"
-                    android:layout_marginLeft="@dimen/height_margin_default"
-                    android:layout_marginRight="@dimen/height_margin_default" />
-
-                <Space
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/height_margin_default" />
-
-
-                <Button
-                    android:id="@+id/btnButton"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/height_context_line_default"
+                    android:text="文本"
                     android:layout_margin="@dimen/height_margin_default"
-                    android:text="合  成"
-                    style="@style/CustomTheme.Button"
-                    android:layout_marginLeft="@dimen/height_margin_default"
-                    android:layout_marginRight="@dimen/height_margin_default"/>
+                    style="@style/CustomTheme.Button.Link"/>
+                <Button
+                    android:id="@+id/btnVoice"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="语音"
+                    android:layout_margin="@dimen/height_margin_default"
+                    style="@style/CustomTheme.Button.Link"/>
             </LinearLayout>
-
         </ScrollView>
-
 
     </LinearLayout>
 

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Activity.SynthesizerActivity">
+    tools:context=".Activity.UnderstanderTextActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -16,7 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/height_actionbar_activity"
             style="@style/CustomTheme.Toolbar.Light"
-            app:title="在线语音合成"
+            app:title="语义理解 - 文本"
             />
 
         <View
@@ -34,15 +34,26 @@
                 android:orientation="vertical"
                 android:background="@color/whiteColor">
 
+
+
                 <Space
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/height_margin_default" />
+
+                <TextView
+                    android:id="@+id/textView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Text"
+                    style="@style/CustomTheme.TextView"
+                    android:minLines="1"
+                    android:layout_margin="@dimen/height_margin_default"/>
 
                 <EditText
                     android:id="@+id/editText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="合成内容"
+                    android:hint="语义理解文本"
                     style="@style/CustomTheme.EditText"
                     android:inputType="textMultiLine"
                     android:minLines="1"
@@ -59,7 +70,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/height_context_line_default"
                     android:layout_margin="@dimen/height_margin_default"
-                    android:text="合  成"
+                    android:text="确  定"
                     style="@style/CustomTheme.Button"
                     android:layout_marginLeft="@dimen/height_margin_default"
                     android:layout_marginRight="@dimen/height_margin_default"/>
