@@ -1,10 +1,9 @@
-package com.yuansong.features.Net;
+package com.yuansong.xf.Net;
 
-import android.annotation.SuppressLint;
+
 import android.os.AsyncTask;
 import android.util.Log;
 
-import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.MediaType;
@@ -38,6 +37,11 @@ public class HttpHandler {
     }
 
 
+    /**
+     * 获取http信息（GET）
+     * @param url 网址
+     * @param callBack 回调接口
+     */
     public void getHttpData_Get(String url,ICallBack callBack){
         if(callBack != null){
             if(mIsWorking){
@@ -54,6 +58,12 @@ public class HttpHandler {
         }
     }
 
+    /**
+     * 获取http信息（POST）
+     * @param url 网址
+     * @param data JSON数据
+     * @param callBack 回调接口
+     */
     public void getHttpData_Post(String url, String data, ICallBack callBack){
         if(callBack != null){
             if(mIsWorking){

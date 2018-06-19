@@ -51,8 +51,8 @@ public class OkHttpActivity extends BaseActivity {
     }
 
     private void subGet(String url) {
-        com.yuansong.features.Net.HttpHandler httpHandler = new com.yuansong.features.Net.HttpHandler();
-        httpHandler.getHttpData_Get(url, new com.yuansong.features.Net.HttpHandler.ICallBack() {
+        com.yuansong.xf.Net.HttpHandler httpHandler = new com.yuansong.xf.Net.HttpHandler();
+        httpHandler.getHttpData_Get(url, new com.yuansong.xf.Net.HttpHandler.ICallBack() {
             @Override
             public void onGetData(String data) {
                 CommonFun.showMsg(OkHttpActivity.this,data);
@@ -77,8 +77,8 @@ public class OkHttpActivity extends BaseActivity {
     }
 
     private void subPost(String url,String data){
-        com.yuansong.features.Net.HttpHandler httpHandler = new com.yuansong.features.Net.HttpHandler();
-        httpHandler.getHttpData_Post(url, data, new com.yuansong.features.Net.HttpHandler.ICallBack() {
+        com.yuansong.xf.Net.HttpHandler httpHandler = new com.yuansong.xf.Net.HttpHandler();
+        httpHandler.getHttpData_Post(url, data, new com.yuansong.xf.Net.HttpHandler.ICallBack() {
             @Override
             public void onGetData(String data) {
                 CommonFun.showMsg(OkHttpActivity.this,data);

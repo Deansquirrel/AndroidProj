@@ -24,7 +24,12 @@ import com.iflytek.cloud.TextUnderstander;
 import com.iflytek.cloud.TextUnderstanderListener;
 import com.iflytek.cloud.UnderstanderResult;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.HashMap;
+import java.util.Map;
 
 public class IflytekHelper {
 
@@ -89,7 +94,8 @@ public class IflytekHelper {
     public interface TextUnderstanderListener{
         void preUnderstand();
         void postUnderstand();
-        void onCompleted(String result);
+//        void onCompleted(String result);
+        void onCompleted(int rc, String service, String intent, Map<String,String>data);
         void onFailed(int errCode, String errDesc);
     }
 
@@ -211,71 +217,6 @@ public class IflytekHelper {
                     }
                 });
     }
-
-//    /**
-//     * 语义识别 初始化
-//     */
-//    public void InitAIUIAgent(final IflytekHelper.AIUIListener listener){
-//        mAIUIEventType = AIUIEventType.InitCheck;
-//        mAIUIAgent = AIUIAgent.createAgent(mActivity.getApplicationContext(),
-//                getAIUIparams(),
-//                new com.iflytek.aiui.AIUIListener() {
-//                    @Override
-//                    public void onEvent(AIUIEvent aiuiEvent) {
-//                        Log.i("event",String.valueOf(aiuiEvent.eventType));
-//                        switch (aiuiEvent.eventType){
-//                            case AIUIConstant.EVENT_RESULT:
-//                                Log.i("result","--------------------------------------");
-//                                Log.i("arg1",String.valueOf(aiuiEvent.arg1));
-//                                Log.i("arg2",String.valueOf(aiuiEvent.arg2));
-//                                Log.i("info",aiuiEvent.info);
-//                                Log.i("data",aiuiEvent.data.toString());
-//                                Log.i("result","--------------------------------------");
-//                                break;
-//                            case AIUIConstant.EVENT_STATE:
-//                                switch (aiuiEvent.arg1){
-//                                    case AIUIConstant.STATE_IDLE:
-//                                        Log.i("state","STATE_IDLE");
-//                                        mAIUIServiceState = AIUIServiceState.STATE_IDLE;
-//                                        if(listener != null){
-//                                            listener.onStateChanged(AIUIServiceState.STATE_IDLE);
-//                                        }
-//                                        break;
-//                                    case AIUIConstant.STATE_READY:
-//                                        Log.i("state","STATE_READY");
-//                                        mAIUIServiceState = AIUIServiceState.STATE_READY;
-//                                        if(listener != null){
-//                                            if(mAIUIEventType == AIUIEventType.InitCheck){
-//                                                mAIUIEventType = AIUIEventType.None;
-//                                                listener.onInitSuccess();
-//                                            }
-//                                            listener.onStateChanged(AIUIServiceState.STATE_READY);
-//                                        }
-//                                        break;
-//                                    case AIUIConstant.STATE_WORKING:
-//                                        Log.i("state","STATE_WORKING");
-//                                        mAIUIServiceState = AIUIServiceState.STATE_WORKING;
-//                                        if(listener != null){
-//                                            listener.onStateChanged(AIUIServiceState.STATE_WORKING);
-//                                        }
-//                                        break;
-//                                }
-//                                break;
-//                            case AIUIConstant.EVENT_ERROR:
-//                                if(listener != null){
-//                                    if(mAIUIEventType == AIUIEventType.InitCheck){
-//                                        mAIUIEventType = AIUIEventType.None;
-//                                        listener.onInitFailed(aiuiEvent.arg1,aiuiEvent.info);
-//                                    }
-//                                    else{
-//                                        listener.onError(aiuiEvent.arg1,aiuiEvent.info);
-//                                    }
-//                                }
-//                                break;
-//                        }
-//                    }
-//                });
-//    }
 
     public void destroy(){
         if(mSpeechSynthesizer != null){
@@ -480,8 +421,53 @@ public class IflytekHelper {
         mTextUnderstander.understandText(msg, new com.iflytek.cloud.TextUnderstanderListener() {
             @Override
             public void onResult(UnderstanderResult understanderResult) {
+                Log.i("result",understanderResult.getResultString());
                 if(listener != null){
-                    listener.onCompleted(understanderResult.getResultString());
+//                    listener.onCompleted(understanderResult.getResultString());
+                    try {
+                        JSONObject json = new JSONObject(understanderResult.getResultString());
+                        int rc = json.getInt("rc");
+                        switch (rc){
+                            case 0:
+                                String service = json.getString("service");
+                                JSONArray semantic = json.getJSONArray("semantic");
+//                                Log.i("json data",ja.get(0).toString());
+                                JSONObject semanticFirst = new JSONObject(semantic.get(0).toString());
+//                                Log.i("slots",j.getString("slots"));
+                                String intent = semanticFirst.getString("intent");
+                                JSONArray slots = semanticFirst.getJSONArray("slots");
+//                                Log.i("json data",slots.get(0).toString());
+//                                JSONObject slot = new JSONObject(slots.get(0).toString());
+//                                Log.i("name",slot.getString("name"));
+//                                Log.i("value",slot.getString("value"));
+                                Map<String,String> data = new HashMap<>();
+                                for(int i=0;i<slots.length();i++){
+                                    JSONObject slot = new JSONObject(slots.get(i).toString());
+                                    data.put(slot.getString("name"),slot.getString("value"));
+                                }
+                                listener.onCompleted(rc,service,intent, data);
+                                break;
+                            case 1:
+                                listener.onFailed(rc,"输入异常");
+                                break;
+                            case 2:
+                                listener.onFailed(rc,"系统内部异常");
+                                break;
+                            case 3:
+                                listener.onFailed(rc,json.get("error").toString());
+                                break;
+                            case 4:
+                                listener.onFailed(rc,"文本没有匹配的技能场景，技能不理解或不能处理该文本");
+                                break;
+                            default:
+                                listener.onFailed(rc,"rc类型未定义");
+                                break;
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        listener.onFailed(-1,e.getMessage());
+                    }
+
                     listener.postUnderstand();
                 }
             }
@@ -606,5 +592,71 @@ public class IflytekHelper {
 //                null,
 //                null);
 //        mAIUIAgent.sendMessage(getStateMsg);
+//    }
+
+
+    //    /**
+//     * 语义识别 初始化
+//     */
+//    public void InitAIUIAgent(final IflytekHelper.AIUIListener listener){
+//        mAIUIEventType = AIUIEventType.InitCheck;
+//        mAIUIAgent = AIUIAgent.createAgent(mActivity.getApplicationContext(),
+//                getAIUIparams(),
+//                new com.iflytek.aiui.AIUIListener() {
+//                    @Override
+//                    public void onEvent(AIUIEvent aiuiEvent) {
+//                        Log.i("event",String.valueOf(aiuiEvent.eventType));
+//                        switch (aiuiEvent.eventType){
+//                            case AIUIConstant.EVENT_RESULT:
+//                                Log.i("result","--------------------------------------");
+//                                Log.i("arg1",String.valueOf(aiuiEvent.arg1));
+//                                Log.i("arg2",String.valueOf(aiuiEvent.arg2));
+//                                Log.i("info",aiuiEvent.info);
+//                                Log.i("data",aiuiEvent.data.toString());
+//                                Log.i("result","--------------------------------------");
+//                                break;
+//                            case AIUIConstant.EVENT_STATE:
+//                                switch (aiuiEvent.arg1){
+//                                    case AIUIConstant.STATE_IDLE:
+//                                        Log.i("state","STATE_IDLE");
+//                                        mAIUIServiceState = AIUIServiceState.STATE_IDLE;
+//                                        if(listener != null){
+//                                            listener.onStateChanged(AIUIServiceState.STATE_IDLE);
+//                                        }
+//                                        break;
+//                                    case AIUIConstant.STATE_READY:
+//                                        Log.i("state","STATE_READY");
+//                                        mAIUIServiceState = AIUIServiceState.STATE_READY;
+//                                        if(listener != null){
+//                                            if(mAIUIEventType == AIUIEventType.InitCheck){
+//                                                mAIUIEventType = AIUIEventType.None;
+//                                                listener.onInitSuccess();
+//                                            }
+//                                            listener.onStateChanged(AIUIServiceState.STATE_READY);
+//                                        }
+//                                        break;
+//                                    case AIUIConstant.STATE_WORKING:
+//                                        Log.i("state","STATE_WORKING");
+//                                        mAIUIServiceState = AIUIServiceState.STATE_WORKING;
+//                                        if(listener != null){
+//                                            listener.onStateChanged(AIUIServiceState.STATE_WORKING);
+//                                        }
+//                                        break;
+//                                }
+//                                break;
+//                            case AIUIConstant.EVENT_ERROR:
+//                                if(listener != null){
+//                                    if(mAIUIEventType == AIUIEventType.InitCheck){
+//                                        mAIUIEventType = AIUIEventType.None;
+//                                        listener.onInitFailed(aiuiEvent.arg1,aiuiEvent.info);
+//                                    }
+//                                    else{
+//                                        listener.onError(aiuiEvent.arg1,aiuiEvent.info);
+//                                    }
+//                                }
+//                                break;
+//                        }
+//                    }
+//                });
 //    }
 }

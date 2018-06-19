@@ -46,38 +46,38 @@ public class AIUIActivity extends BaseActivity {
         mTextViewResult.setText("");
 
         mBtnSet = findViewById(R.id.btnSet);
-        mBtnSet.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mTextViewDesc.setVisibility(View.GONE);
-                mTextViewResult.setText("TEST");
-                mTextViewResult.setVisibility(View.VISIBLE);
-                mBtnSet.setVisibility(View.GONE);
-                mBtnClear.setVisibility(View.VISIBLE);
-//                mIflytekHelper.understand();
-                mIflytekHelper.understandText("显示6桌菜品", new IflytekHelper.TextUnderstanderListener() {
-                    @Override
-                    public void preUnderstand() {
-
-                    }
-
-                    @Override
-                    public void postUnderstand() {
-
-                    }
-
-                    @Override
-                    public void onCompleted(String result) {
-                        Log.i("result",result);
-                    }
-
-                    @Override
-                    public void onFailed(int errCode, String errDesc) {
-                        Log.i("err",String.valueOf(errCode) + " | " + errDesc);
-                    }
-                });
-            }
-        });
+//        mBtnSet.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                mTextViewDesc.setVisibility(View.GONE);
+//                mTextViewResult.setText("TEST");
+//                mTextViewResult.setVisibility(View.VISIBLE);
+//                mBtnSet.setVisibility(View.GONE);
+//                mBtnClear.setVisibility(View.VISIBLE);
+////                mIflytekHelper.understand();
+//                mIflytekHelper.understandText("显示6桌菜品", new IflytekHelper.TextUnderstanderListener() {
+//                    @Override
+//                    public void preUnderstand() {
+//
+//                    }
+//
+//                    @Override
+//                    public void postUnderstand() {
+//
+//                    }
+//
+//                    @Override
+//                    public void onCompleted(String result) {
+//                        Log.i("result",result);
+//                    }
+//
+//                    @Override
+//                    public void onFailed(int errCode, String errDesc) {
+//                        Log.i("err",String.valueOf(errCode) + " | " + errDesc);
+//                    }
+//                });
+//            }
+//        });
 
 
         mBtnClear = findViewById(R.id.btnClear);
