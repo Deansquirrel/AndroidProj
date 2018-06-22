@@ -60,6 +60,11 @@ public class UnderstanderTextActivity extends BaseActivity {
         }
     }
 
+    private enum RowAction{
+        Done,
+        Cancel
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -123,7 +128,7 @@ public class UnderstanderTextActivity extends BaseActivity {
                                     case "YUANSONG.ShowMenu":
                                         switch (intent){
                                             case "ShowMenu":
-                                                showMenu(Integer.valueOf(data.get("tableNo")),10,3);
+                                                showMenu(Integer.valueOf(data.get("tableNo")),10,-1);
                                                 break;
                                             case "PageAction":
                                                 String action = data.get("PageAction");
@@ -136,10 +141,23 @@ public class UnderstanderTextActivity extends BaseActivity {
                                                         break;
                                                 }
                                                 break;
+                                            case "MenuAction":
+                                                Log.i("data",mGson.toJson(data));
+                                                Log.i("rowNo",data.get("rowNo"));
+                                                Log.i("menuAction",data.get("menuAction"));
+                                                int rowNo = Integer.valueOf(data.get("rowNo"));
+                                                switch(data.get("menuAction")){
+                                                    case "上菜":
+                                                        menuAction(rowNo,RowAction.Done);
+                                                        break;
+                                                    case "撤菜":
+                                                        menuAction(rowNo,RowAction.Cancel);
+                                                        break;
+                                                }
+                                                break;
                                         }
                                         break;
                                 }
-//                                mTextView.setVisibility(View.VISIBLE);
                             }
 
                             @Override
@@ -220,7 +238,7 @@ public class UnderstanderTextActivity extends BaseActivity {
         mPageSize = pageSize;
         mCurrPage = currPage;
         int ram = tableInfo.size() % mPageSize;
-        int pageCount = (int)(tableInfo.size() / mPageSize);
+        int pageCount = tableInfo.size() / mPageSize;
         if(ram > 0){
             pageCount = pageCount + 1;
         }
@@ -229,11 +247,11 @@ public class UnderstanderTextActivity extends BaseActivity {
             mCurrPage = 1;
         }
 
-        int itemMin = pageSize * (currPage - 1);
+        int itemMin = pageSize * (mCurrPage - 1);
         if(itemMin < 0 || itemMin >= tableInfo.size()){
             itemMin = 0;
         }
-        int itemMax = pageSize * currPage;
+        int itemMax = pageSize * mCurrPage;
         if(itemMax > tableInfo.size()){
             itemMax = tableInfo.size();
         }
@@ -285,4 +303,26 @@ public class UnderstanderTextActivity extends BaseActivity {
         }
     }
 
+    private void menuAction(int rowNo, RowAction rowAction){
+        Log.i("MenuAction",String.valueOf(rowNo) + " | " + rowAction.toString());
+        if(rowNo > mPageSize || rowNo < 1){
+            String msg = "没有 " + String.valueOf(rowNo) + " 行";
+            Log.w("warn",msg);
+            CommonFun.showMsg(UnderstanderTextActivity.this,msg);
+        }
+        else{
+            int key = mPageSize * (mCurrPage - 1) + rowNo;
+            TableRow tableRow = tableInfo.get(key);
+            switch (rowAction){
+                case Done:
+                    tableRow.mState = RowState.Done;
+                    break;
+                case Cancel:
+                    tableRow.mState = RowState.Cancel;
+                    break;
+            }
+            tableInfo.append(key,tableRow);
+            showMenu(mTableNo,mPageSize,mCurrPage);
+        }
+    }
 }

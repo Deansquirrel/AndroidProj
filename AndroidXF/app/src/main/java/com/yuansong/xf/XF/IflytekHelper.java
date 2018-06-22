@@ -18,6 +18,7 @@ import com.iflytek.cloud.SpeechError;
 import com.iflytek.cloud.SpeechRecognizer;
 import com.iflytek.cloud.SpeechSynthesizer;
 import com.iflytek.cloud.SpeechUnderstander;
+import com.iflytek.cloud.SpeechUnderstanderListener;
 import com.iflytek.cloud.SpeechUtility;
 import com.iflytek.cloud.SynthesizerListener;
 import com.iflytek.cloud.TextUnderstander;
@@ -94,7 +95,6 @@ public class IflytekHelper {
     public interface TextUnderstanderListener{
         void preUnderstand();
         void postUnderstand();
-//        void onCompleted(String result);
         void onCompleted(int rc, String service, String intent, Map<String,String>data);
         void onFailed(int errCode, String errDesc);
     }
@@ -481,6 +481,93 @@ public class IflytekHelper {
         });
     }
 
+    public void understandVoice(final TextUnderstanderListener listener){
+        if(listener != null){
+            listener.preUnderstand();
+        }
+        mSpeechUnderstander.startUnderstanding(new SpeechUnderstanderListener() {
+            @Override
+            public void onVolumeChanged(int i, byte[] bytes) {
+
+            }
+
+            @Override
+            public void onBeginOfSpeech() {
+                Log.i("begin","onBeginOfSpeech");
+            }
+
+            @Override
+            public void onEndOfSpeech() {
+                Log.i("end","onEndOfSpeech");
+            }
+
+            @Override
+            public void onResult(UnderstanderResult understanderResult) {
+                Log.i("result",understanderResult.getResultString());
+                if(listener != null){
+//                    listener.onCompleted(understanderResult.getResultString());
+                    try {
+                        JSONObject json = new JSONObject(understanderResult.getResultString());
+                        int rc = json.getInt("rc");
+                        switch (rc){
+                            case 0:
+                                String service = json.getString("service");
+                                JSONArray semantic = json.getJSONArray("semantic");
+//                                Log.i("json data",ja.get(0).toString());
+                                JSONObject semanticFirst = new JSONObject(semantic.get(0).toString());
+//                                Log.i("slots",j.getString("slots"));
+                                String intent = semanticFirst.getString("intent");
+                                JSONArray slots = semanticFirst.getJSONArray("slots");
+//                                Log.i("json data",slots.get(0).toString());
+//                                JSONObject slot = new JSONObject(slots.get(0).toString());
+//                                Log.i("name",slot.getString("name"));
+//                                Log.i("value",slot.getString("value"));
+                                Map<String,String> data = new HashMap<>();
+                                for(int i=0;i<slots.length();i++){
+                                    JSONObject slot = new JSONObject(slots.get(i).toString());
+                                    data.put(slot.getString("name"),slot.getString("value"));
+                                }
+                                listener.onCompleted(rc,service,intent, data);
+                                break;
+                            case 1:
+                                listener.onFailed(rc,"输入异常");
+                                break;
+                            case 2:
+                                listener.onFailed(rc,"系统内部异常");
+                                break;
+                            case 3:
+                                listener.onFailed(rc,json.get("error").toString());
+                                break;
+                            case 4:
+                                listener.onFailed(rc,"文本没有匹配的技能场景，技能不理解或不能处理该文本");
+                                break;
+                            default:
+                                listener.onFailed(rc,"rc类型未定义");
+                                break;
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        listener.onFailed(-1,e.getMessage());
+                    }
+
+                    listener.postUnderstand();
+                }
+            }
+
+            @Override
+            public void onError(SpeechError speechError) {
+                if(listener != null){
+                    listener.onFailed(speechError.getErrorCode(),speechError.getErrorDescription());
+                    listener.postUnderstand();
+                }
+            }
+
+            @Override
+            public void onEvent(int i, int i1, int i2, Bundle bundle) {
+
+            }
+        });
+    }
 //    public void understand(String msg){
 ////        if(mAIUIServiceState != AIUIServiceState.STATE_WORKING){
 ////            wakeupAIUIService();
