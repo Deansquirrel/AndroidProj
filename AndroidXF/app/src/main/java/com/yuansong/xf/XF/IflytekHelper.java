@@ -303,7 +303,7 @@ public class IflytekHelper {
         mSpeechUnderstander.setParameter(SpeechConstant.DOMAIN, "iat");
         mSpeechUnderstander.setParameter(SpeechConstant.AUDIO_SOURCE, String.valueOf(MediaRecorder.AudioSource.MIC));
         mSpeechUnderstander.setParameter(SpeechConstant.VAD_BOS,"4000");
-        mSpeechUnderstander.setParameter(SpeechConstant.VAD_EOS,"10000");
+        mSpeechUnderstander.setParameter(SpeechConstant.VAD_EOS,"2000");
         mSpeechUnderstander.setParameter(SpeechConstant.VAD_ENABLE,"1");
         mSpeechUnderstander.setParameter(SpeechConstant.SAMPLE_RATE,"16000");
         mSpeechUnderstander.setParameter(SpeechConstant.RESULT_TYPE,"json");
@@ -423,7 +423,6 @@ public class IflytekHelper {
             public void onResult(UnderstanderResult understanderResult) {
                 Log.i("result",understanderResult.getResultString());
                 if(listener != null){
-//                    listener.onCompleted(understanderResult.getResultString());
                     try {
                         JSONObject json = new JSONObject(understanderResult.getResultString());
                         int rc = json.getInt("rc");
@@ -431,15 +430,9 @@ public class IflytekHelper {
                             case 0:
                                 String service = json.getString("service");
                                 JSONArray semantic = json.getJSONArray("semantic");
-//                                Log.i("json data",ja.get(0).toString());
                                 JSONObject semanticFirst = new JSONObject(semantic.get(0).toString());
-//                                Log.i("slots",j.getString("slots"));
                                 String intent = semanticFirst.getString("intent");
                                 JSONArray slots = semanticFirst.getJSONArray("slots");
-//                                Log.i("json data",slots.get(0).toString());
-//                                JSONObject slot = new JSONObject(slots.get(0).toString());
-//                                Log.i("name",slot.getString("name"));
-//                                Log.i("value",slot.getString("value"));
                                 Map<String,String> data = new HashMap<>();
                                 for(int i=0;i<slots.length();i++){
                                     JSONObject slot = new JSONObject(slots.get(i).toString());
@@ -481,7 +474,7 @@ public class IflytekHelper {
         });
     }
 
-    public void understandVoice(final TextUnderstanderListener listener){
+    public void startUnderstanding(final TextUnderstanderListener listener){
         if(listener != null){
             listener.preUnderstand();
         }
@@ -505,7 +498,6 @@ public class IflytekHelper {
             public void onResult(UnderstanderResult understanderResult) {
                 Log.i("result",understanderResult.getResultString());
                 if(listener != null){
-//                    listener.onCompleted(understanderResult.getResultString());
                     try {
                         JSONObject json = new JSONObject(understanderResult.getResultString());
                         int rc = json.getInt("rc");
@@ -513,15 +505,9 @@ public class IflytekHelper {
                             case 0:
                                 String service = json.getString("service");
                                 JSONArray semantic = json.getJSONArray("semantic");
-//                                Log.i("json data",ja.get(0).toString());
                                 JSONObject semanticFirst = new JSONObject(semantic.get(0).toString());
-//                                Log.i("slots",j.getString("slots"));
                                 String intent = semanticFirst.getString("intent");
                                 JSONArray slots = semanticFirst.getJSONArray("slots");
-//                                Log.i("json data",slots.get(0).toString());
-//                                JSONObject slot = new JSONObject(slots.get(0).toString());
-//                                Log.i("name",slot.getString("name"));
-//                                Log.i("value",slot.getString("value"));
                                 Map<String,String> data = new HashMap<>();
                                 for(int i=0;i<slots.length();i++){
                                     JSONObject slot = new JSONObject(slots.get(i).toString());
@@ -568,7 +554,12 @@ public class IflytekHelper {
             }
         });
     }
-//    public void understand(String msg){
+
+    public void stopUnderstanding(){
+        mSpeechUnderstander.stopUnderstanding();
+    }
+
+    //    public void understand(String msg){
 ////        if(mAIUIServiceState != AIUIServiceState.STATE_WORKING){
 ////            wakeupAIUIService();
 ////        }

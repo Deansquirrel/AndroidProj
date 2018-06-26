@@ -6,4 +6,67 @@
     android:layout_height="match_parent"
     tools:context=".Activity.UnderstanderVoiceActivity">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/height_actionbar_activity"
+            style="@style/CustomTheme.Toolbar.Light"
+            app:title="语义理解 - 语音"
+            />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/backColor" />
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:divider="@drawable/shape"
+                android:showDividers="middle"
+                android:background="@color/whiteColor">
+
+                <TextView
+                    android:id="@+id/textView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/height_margin_default"
+                    android:hint=""
+                    style="@style/CustomTheme.TextView"
+                    android:text="TextView" />
+            </LinearLayout>
+
+        </ScrollView>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/whiteColor"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/btnButton"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/height_context_line_default"
+                android:layout_margin="@dimen/height_margin_default"
+                android:text="开  始"
+                style="@style/CustomTheme.Button"/>
+
+        </LinearLayout>
+
+
+
+
+    </LinearLayout>
+
 </android.support.constraint.ConstraintLayout>

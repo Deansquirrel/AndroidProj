@@ -28,7 +28,7 @@ public class UnderstanderTextActivity extends BaseActivity {
 
     private IflytekHelper mIflytekHelper = null;
 
-    Gson mGson = null;
+    private Gson mGson = null;
 
     //缓存
     private int mTableNo = -1;
